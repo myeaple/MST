@@ -1,5 +1,3 @@
-import java.util.*;
-
 /**
  * Vertex.java
  * 
@@ -9,6 +7,8 @@ import java.util.*;
  * @author MikeYeaple
  *
  */
+
+import java.util.*;
 
 public class Vertex {
 	
@@ -78,6 +78,18 @@ public class Vertex {
 	public boolean IsVisited()
 	{
 		return visited;
+	}
+	
+	/**
+	 * GetName()
+	 * 
+	 * Returns the "name" of the vertex as a string.
+	 * 
+	 * @return - the "name" of the vertex.
+	 */
+	public String GetName()
+	{
+		return Integer.toString(name);
 	}
 	
 }
