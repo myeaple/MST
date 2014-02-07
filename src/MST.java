@@ -92,7 +92,7 @@ public class MST {
 			ExitWithMessage("p must be between 0 and 1");
 		
 		// Build the graph
-		
+		Graph g = new Graph(numVertices, seed, p);
 		
 	}
 	
@@ -103,7 +103,14 @@ public class MST {
 		System.exit(1);
 	}
 	
-	private static void ExitWithError(Exception e)
+	/**
+	 * ExitWithError()
+	 * 
+	 * Exits and prints an exception's error message to err when called.
+	 * 
+	 * @param e - the caught exception.
+	 */
+	public static void ExitWithError(Exception e)
 	{
 		System.err.println(String.format("Error: {0}", e.getMessage()));
 		System.exit(1);

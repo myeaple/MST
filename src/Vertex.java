@@ -13,13 +13,13 @@ import java.util.*;
 public class Vertex {
 	
 	private int name; // Name is a number (i.e. 0, 1, etc.)
-	private ArrayList<Edge> edges;
+	// weightByInteger represents the weight between this vertex and 
+	// another by the name of the other vertex.
+	// K: otherVertex -> V: weight of edge
+	private HashMap<Integer, Long> weightByVertexName;
 	private boolean visited;
 	
-	public Vertex()
-	{
-		edges = new ArrayList<Edge>();
-	}
+	public Vertex(){ }
 	
 	/**
 	 * Vertex() - specific constructor
@@ -29,7 +29,7 @@ public class Vertex {
 	public Vertex(int name)
 	{
 		this.name = name;
-		edges = new ArrayList<Edge>();
+		weightByVertexName = new HashMap<Integer, Long>();
 	}
 	
 	/**
@@ -41,21 +41,18 @@ public class Vertex {
 	 * @param vNew - the vertex to connect to via the new edge.
 	 * @param weight - the weight of the edge connecting the two vertices.
 	 */
-	public void AddEdge(Vertex vNew, int weight)
+	public void AddEdge(Vertex vNew, long weight) throws VertexException
 	{
-		edges.add(new Edge(this, vNew, weight));
-	}
-	
-	/**
-	 * GetEdges()
-	 * 
-	 * Gets a list of the edges connected to this vertex.
-	 * 
-	 * @return - the edges connected to this vertex.
-	 */
-	public ArrayList<Edge> GetEdges()
-	{
-		return edges;
+		int vName = vNew.GetName();
+		
+		if (!weightByVertexName.containsKey(vName))
+		{
+			weightByVertexName.put(vName, weight);
+		}
+		else
+		{
+			throw new VertexException("Edge already exists.");
+		}
 	}
 	
 	/**
@@ -66,6 +63,16 @@ public class Vertex {
 	public void Visit()
 	{
 		visited = true;
+	}
+	
+	/**
+	 * Reset()
+	 * 
+	 * Marks the current node as not visited.
+	 */
+	public void Reset()
+	{
+		visited = false;
 	}
 	
 	/**
@@ -81,15 +88,39 @@ public class Vertex {
 	}
 	
 	/**
-	 * GetName()
+	 * NameToString()
 	 * 
 	 * Returns the "name" of the vertex as a string.
 	 * 
 	 * @return - the "name" of the vertex.
 	 */
-	public String GetName()
+	public String NameToString()
 	{
 		return Integer.toString(name);
+	}
+	
+	/**
+	 * GetName()
+	 * 
+	 * Returns the name of the string as an int.
+	 * 
+	 * @return - the name of the string as an int.
+	 */
+	public int GetName()
+	{
+		return name;
+	}
+	
+	/**
+	 * GetEdges()
+	 * 
+	 * Returns the connected vertices mapped to the weights.
+	 * 
+	 * @return - a hashmap of the weight of each edge by the vertex name.
+	 */
+	public HashMap<Integer, Long> GetEdges()
+	{
+		return weightByVertexName;
 	}
 	
 }
