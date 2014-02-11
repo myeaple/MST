@@ -11,6 +11,8 @@ import java.util.*;
 
 public class Graph {
 
+	private final int MIN = 1;
+	
 	private int numVertices = 0;
 	private long seed = 0;
 	private double p = 0.0;
@@ -80,8 +82,8 @@ public class Graph {
 				if (connected <= p)
 				{
 					// int range = max - min + 1
-					int range = numVertices;
-					int weight = wConnection.nextInt(range);
+					int range = numVertices - MIN + 1;
+					int weight = MIN + wConnection.nextInt(range);
 					
 					// Add the edge to both vertices in our adjacency list.
 					try 
@@ -190,7 +192,7 @@ public class Graph {
 				if (edges.containsKey(j))
 				{
 					currLine += " " + Integer.toString(j) 
-					+ String.format("({0})", Long.toString(edges.get(j)));
+					+ String.format("(%s)", Long.toString(edges.get(j)));
 				}
 			}
 			
