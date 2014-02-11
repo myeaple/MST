@@ -79,7 +79,9 @@ public class Graph {
 				double connected = rConnect.nextDouble();
 				if (connected <= p)
 				{
-					long weight = wConnection.nextLong();
+					// int range = max - min + 1
+					int range = numVertices;
+					int weight = wConnection.nextInt(range);
 					
 					// Add the edge to both vertices in our adjacency list.
 					try 
@@ -228,9 +230,10 @@ public class Graph {
 	 */
 	private int CountVertices()
 	{
+		ResetDFSLists();
+		
 		int count = CountVerticesHelper(gAdjList.get(0), null, 0);
 		
-		ResetDFSLists();
 		ResetVertices();
 		
 		return count;
