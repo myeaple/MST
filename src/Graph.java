@@ -97,7 +97,8 @@ public class Graph {
 					
 					// Add the weighted edge to our matrix.
 					gMatrix[i][j] = weight;
-				}
+					gMatrix[j][i] = weight;
+ 				}
 			}
 		}
 		
