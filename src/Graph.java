@@ -208,6 +208,10 @@ public class Graph {
 	 */
 	public void PrintDFSInfo()
 	{
+		// Only print if there are <= 10 vertices
+		if (numVertices > 10)
+			return;
+		
 		String verticesStr = "";
 		for (int i = 0; i < dfsVertices.size(); i++)
 		{
@@ -321,59 +325,59 @@ public class Graph {
 		return vNext;
 	}
 	
-	/**
-	 * QuickSort()
-	 * 
-	 * Applies a quick sort by name to the given list of vertices.
-	 * 
-	 * @param vertices - the vertices to be sorted by name.
-	 */
-	private ArrayList<Vertex> QuickSort(ArrayList<Vertex> vertices)
-	{
-		if(vertices.size() == 1)
-		{
-			return vertices;
-		}
-		
-		int mid = (int) Math.ceil((double)vertices.size() / 2);
-		Vertex pivot = vertices.get(mid);
-		
-		ArrayList<Vertex> smaller = new ArrayList<Vertex>();
-		ArrayList<Vertex> greater = new ArrayList<Vertex>();
-		
-		for (int i = 0; i < vertices.size(); i++)
-		{
-			if (vertices.get(i).GetName() <= pivot.GetName())
-			{
-				// Skip the middle vertex that we are sorting around.
-				if (i == mid)
-				{
-					continue;
-				}
-				smaller.add(vertices.get(i));
-			}
-			else
-			{
-				greater.add(vertices.get(i));
-			}
-		}
-		
-		ArrayList<Vertex> sorted = new ArrayList<Vertex>();
-		
-		for (int i = 0; i < smaller.size(); i++)
-		{
-			sorted.add(smaller.get(i));
-		}
-		
-		sorted.add(pivot);
-		
-		for (int i = 0; i < greater.size(); i++)
-		{
-			sorted.add(greater.get(i));
-		}
-		
-		return sorted;
-	}
+//	/**
+//	 * QuickSort()
+//	 * 
+//	 * Applies a quick sort by name to the given list of vertices.
+//	 * 
+//	 * @param vertices - the vertices to be sorted by name.
+//	 */
+//	private ArrayList<Vertex> QuickSort(ArrayList<Vertex> vertices)
+//	{
+//		if(vertices.size() == 1)
+//		{
+//			return vertices;
+//		}
+//		
+//		int mid = (int) Math.ceil((double)vertices.size() / 2);
+//		Vertex pivot = vertices.get(mid);
+//		
+//		ArrayList<Vertex> smaller = new ArrayList<Vertex>();
+//		ArrayList<Vertex> greater = new ArrayList<Vertex>();
+//		
+//		for (int i = 0; i < vertices.size(); i++)
+//		{
+//			if (vertices.get(i).GetName() <= pivot.GetName())
+//			{
+//				// Skip the middle vertex that we are sorting around.
+//				if (i == mid)
+//				{
+//					continue;
+//				}
+//				smaller.add(vertices.get(i));
+//			}
+//			else
+//			{
+//				greater.add(vertices.get(i));
+//			}
+//		}
+//		
+//		ArrayList<Vertex> sorted = new ArrayList<Vertex>();
+//		
+//		for (int i = 0; i < smaller.size(); i++)
+//		{
+//			sorted.add(smaller.get(i));
+//		}
+//		
+//		sorted.add(pivot);
+//		
+//		for (int i = 0; i < greater.size(); i++)
+//		{
+//			sorted.add(greater.get(i));
+//		}
+//		
+//		return sorted;
+//	}
 	
 	/**
 	 * ResetVertices()
