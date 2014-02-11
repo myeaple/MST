@@ -220,7 +220,7 @@ public class Graph {
 			predecessorsStr += " " + Integer.toString(predecessors[i]);
 		}
 		
-		System.out.println("Depth-First Search:\nVertices:");
+		System.out.println("\nDepth-First Search:\nVertices:");
 		System.out.println(verticesStr);
 		System.out.println("Predecessors:");
 		System.out.println(predecessorsStr);
