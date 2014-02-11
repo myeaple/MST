@@ -94,19 +94,19 @@ public class MST {
 		// Build the graph
 		Graph g = new Graph(numVertices, seed, p);
 		
-		System.out.println(String.format("TEST: n={0}, seed={1}, p={2}",
+		System.out.println(String.format("\nTEST: n=%s, seed=%s, p=%s",
 					Integer.toString(numVertices),
 					Long.toString(seed),
 					Double.toString(p))
 				);
 		
 		System.out.println(String.format(
-				"Time to generate the graph: {0} milliseconds",
+				"Time to generate the graph: %s milliseconds",
 				Long.toString(g.GetGenerationTime())
 				));
 		
 		g.PrintAdjacencyMatrix();
-		g.PrintAdjacencyMatrix();
+		g.PrintAdjacencyList();
 		g.PrintDFSInfo();
 	}
 	

@@ -19,7 +19,7 @@ public class Graph {
 	private long[][] gMatrix;
 	
 	private ArrayList<Integer> dfsVertices;
-	private ArrayList<Integer> predecessors;
+	private int[] predecessors;
 	
 	// Amount of time it took to generate the graph, in milliseconds.
 	private long generationTime = 0;
@@ -193,6 +193,8 @@ public class Graph {
 					+ String.format("({0})", Long.toString(edges.get(j)));
 				}
 			}
+			
+			System.out.println(currLine);
 		}
 	}
 	
@@ -210,9 +212,9 @@ public class Graph {
 		}
 		
 		String predecessorsStr = "";
-		for (int i = 0; i < predecessors.size(); i++)
+		for (int i = 0; i < predecessors.length; i++)
 		{
-			predecessorsStr += " " + Integer.toString(predecessors.get(i));
+			predecessorsStr += " " + Integer.toString(predecessors[i]);
 		}
 		
 		System.out.println("Depth-First Search:\nVertices:");
@@ -258,10 +260,8 @@ public class Graph {
 			current.Visit(); // Mark the vertex as visited.
 			count++; // Increment our counter
 			
-			if (prev == null)
-				predecessors.add(-1);
-			else
-				predecessors.add(prev.GetName());
+			if (prev != null)
+				predecessors[currVertex.GetName()] = prev.GetName();
 			
 			dfsVertices.add(current.GetName());
 			
@@ -413,7 +413,8 @@ public class Graph {
 	private void ResetDFSLists()
 	{
 		dfsVertices = new ArrayList<Integer>();
-		predecessors = new ArrayList<Integer>();
+		predecessors = new int[numVertices];
+		predecessors[0] = -1;
 	}
 	
 }
