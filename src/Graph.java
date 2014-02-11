@@ -17,7 +17,9 @@ public class Graph {
 	private long seed = 0;
 	private double p = 0.0;
 	
-	private ArrayList<Vertex> gAdjList;
+//	private ArrayList<Vertex> gAdjList;
+	private Vertex[] vertices;
+	private ArrayList<ArrayList<Integer>> gAdjList;
 	private long[][] gMatrix;
 	
 	private int[] predecessors;
@@ -46,7 +48,8 @@ public class Graph {
 		this.seed = seed;
 		this.p = p;
 		
-		gAdjList = new ArrayList<Vertex>();
+		vertices = new Vertex[this.numVertices];
+		gAdjList = new ArrayList<ArrayList<Integer>>();
 		gMatrix = new long[this.numVertices][this.numVertices];
 		
 		
@@ -66,7 +69,8 @@ public class Graph {
 		// Generate vertices for our adjacency list
 		for (int i = 0; i < numVertices; i++)
 		{
-			gAdjList.add(new Vertex(i));
+			vertices[i] = new Vertex(i);
+			gAdjList.add(new ArrayList<Integer>());
 		}
 		
 		Random rConnect = new Random(seed);
@@ -84,15 +88,19 @@ public class Graph {
 					int range = numVertices - MIN + 1;
 					int weight = MIN + wConnection.nextInt(range);
 					
-					// Add the edge to both vertices in our adjacency list.
+					// Add edges to our vertices.
 					try 
 					{
-						gAdjList.get(i).AddEdge(gAdjList.get(j), weight);
-						gAdjList.get(j).AddEdge(gAdjList.get(i), weight);
+						vertices[i].AddEdge(vertices[j], weight);
+						vertices[j].AddEdge(vertices[i], weight);
 					} catch (VertexException e) 
 					{
 						MST.ExitWithError(e);
 					}
+					
+					// Add the edge to both vertices in our adjacency list.
+					gAdjList.get(i).add(j);
+					gAdjList.get(j).add(i);
 					
 					// Add the weighted edge to our matrix.
 					gMatrix[i][j] = weight;
@@ -181,7 +189,7 @@ public class Graph {
 		System.out.println("\nThe graph as an adjacency list:");
 		for (int i = 0; i < gAdjList.size(); i++)
 		{
-			Vertex currVertex = gAdjList.get(i);
+			Vertex currVertex = vertices[i];
 			
 			HashMap<Integer, Long> edges = currVertex.GetEdges();
 			
@@ -192,7 +200,7 @@ public class Graph {
 				if (edges.containsKey(j))
 				{
 					currLine += " " + Integer.toString(j) 
-					+ String.format("(%s)", Long.toString(edges.get(j)));
+						+ String.format("(%s)", Long.toString(edges.get(j)));
 				}
 			}
 			
@@ -236,7 +244,7 @@ public class Graph {
 	{
 		ResetDFSLists();
 		
-		int count = CountVerticesHelper(gAdjList.get(0), null, 0);
+		int count = CountVerticesHelper(vertices[0], null, 0);
 		
 		ResetVertices();
 		
@@ -295,7 +303,7 @@ public class Graph {
 		{
 			if (edges.containsKey(i))
 			{
-				vNext.add(gAdjList.get(i));
+				vNext.add(vertices[i]);
 			}
 		}
 		
@@ -381,7 +389,7 @@ public class Graph {
 	{
 		for (int i = 0; i < gAdjList.size(); i++)
 		{
-			gAdjList.get(i).Reset();
+			vertices[i].Reset();
 		}
 	}
 	
@@ -393,7 +401,7 @@ public class Graph {
 	private void ResetGraphs()
 	{
 		// Reset the adjacency list.
-		gAdjList = new ArrayList<Vertex>();
+		gAdjList = new ArrayList<ArrayList<Integer>>();
 		
 		// Reset the matrix.
 		for (int i = 0; i < numVertices; i++)
