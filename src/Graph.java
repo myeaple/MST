@@ -3,7 +3,7 @@
  * 
  * The purpose of this class is to represent an undirected, weighted graph.
  * 
- * @author MikeYeaple
+ * @author Michael Yeaple
  *
  */
 
@@ -20,7 +20,6 @@ public class Graph {
 	private ArrayList<Vertex> gAdjList;
 	private long[][] gMatrix;
 	
-	private ArrayList<Integer> dfsVertices;
 	private int[] predecessors;
 	
 	// Amount of time it took to generate the graph, in milliseconds.
@@ -212,15 +211,11 @@ public class Graph {
 		if (numVertices > 10)
 			return;
 		
-		String verticesStr = "";
-		for (int i = 0; i < dfsVertices.size(); i++)
-		{
-			verticesStr += " " + Integer.toString(dfsVertices.get(i));
-		}
-		
+		String verticesStr = "";		
 		String predecessorsStr = "";
 		for (int i = 0; i < predecessors.length; i++)
 		{
+			verticesStr += " " + Integer.toString(i);
 			predecessorsStr += " " + Integer.toString(predecessors[i]);
 		}
 		
@@ -269,8 +264,6 @@ public class Graph {
 			
 			if (prev != null)
 				predecessors[currVertex.GetName()] = prev.GetName();
-			
-			dfsVertices.add(current.GetName());
 			
 			ArrayList<Vertex> next = GetNextVertices(current);
 			
@@ -419,7 +412,6 @@ public class Graph {
 	 */
 	private void ResetDFSLists()
 	{
-		dfsVertices = new ArrayList<Integer>();
 		predecessors = new int[numVertices];
 		predecessors[0] = -1;
 	}

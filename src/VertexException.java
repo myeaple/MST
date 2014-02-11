@@ -4,7 +4,7 @@
  * The purpose of this class is to represent an error when working
  * with vertices in the graph.
  * 
- * @author MikeYeaple
+ * @author Michael Yeaple
  *
  */
 

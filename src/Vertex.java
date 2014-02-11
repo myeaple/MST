@@ -4,7 +4,7 @@
  * The purpose of this class is to represent a vertex within an
  * undirected, weighted graph.
  * 
- * @author MikeYeaple
+ * @author Michael Yeaple
  *
  */
 
