@@ -168,7 +168,12 @@ public class Graph {
 			
 			for (int j = 0; j < numVertices; j++)
 			{
-				currLine += "   " + Long.toString(gMatrix[i][j]);
+				String spacing = "   ";
+				
+				if (gMatrix[i][j] == 10)
+					spacing = "  ";
+				
+				currLine += spacing + Long.toString(gMatrix[i][j]);
 			}
 			
 			System.out.println(currLine);
@@ -222,9 +227,12 @@ public class Graph {
 		String verticesStr = "";		
 		String predecessorsStr = "";
 		for (int i = 0; i < predecessors.length; i++)
-		{
+		{			
+			if (i > 0)
+				predecessorsStr += " ";
+			
 			verticesStr += " " + Integer.toString(i);
-			predecessorsStr += " " + Integer.toString(predecessors[i]);
+			predecessorsStr += Integer.toString(predecessors[i]);
 		}
 		
 		System.out.println("\nDepth-First Search:\nVertices:");
