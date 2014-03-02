@@ -17,7 +17,7 @@ public class Vertex {
 	// another by the name of the other vertex.
 	// K: otherVertex -> V: weight of edge
 	private HashMap<Integer, Long> weightByVertexName;
-	private Edge edge;
+	private ArrayList<Edge> edges;
 	private boolean visited;
 	
 	public Vertex(){ }
@@ -31,6 +31,7 @@ public class Vertex {
 	{
 		this.name = name;
 		weightByVertexName = new HashMap<Integer, Long>();
+		edges = new ArrayList<Edge>();
 	}
 	
 	/**
@@ -54,6 +55,18 @@ public class Vertex {
 		{
 			throw new VertexException("Edge already exists.");
 		}
+	}
+	
+	/**
+	 * AddEdge()
+	 * 
+	 * Adds a new edge to the Vertex.
+	 * 
+	 * @param eNew - the edge to be added to the Vertex.
+	 */
+	public void AddEdge(Edge eNew)
+	{
+		edges.add(eNew);
 	}
 	
 	/**

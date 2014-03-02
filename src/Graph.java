@@ -87,12 +87,16 @@ public class Graph {
 					// int range = max - min + 1
 					int range = numVertices - MIN + 1;
 					int weight = MIN + wConnection.nextInt(range);
+					Edge eNew = new Edge(vertices[i], vertices[j], weight);
 					
 					// Add edges to our vertices.
 					try 
 					{
 						vertices[i].AddEdge(vertices[j], weight);
 						vertices[j].AddEdge(vertices[i], weight);
+						vertices[i].AddEdge(eNew);
+						vertices[j].AddEdge(eNew);
+						edges.add(eNew);
 					} catch (VertexException e) 
 					{
 						MST.ExitWithError(e);
@@ -314,22 +318,6 @@ public class Graph {
 				vNext.add(vertices[i]);
 			}
 		}
-		
-//		Set<Integer> connected = edges.keySet();
-//		
-//		Iterator<Integer> cIter = connected.iterator();
-//		while (cIter.hasNext())
-//		{
-//			int vName = cIter.next();
-//			//long weight = edges.get(vNext); // don't care about weight here.
-//			Vertex vAdd = gAdjList.get(vName);
-//			
-//			if (!vNext.contains(vAdd))
-//				vNext.add(vAdd);
-//		}
-//		
-//		if (sort)
-//			vNext = QuickSort(vNext);
 		
 		return vNext;
 	}

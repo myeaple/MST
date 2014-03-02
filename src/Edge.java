@@ -10,8 +10,8 @@
 
 public class Edge {
 
-	private Vertex v1;
-	private Vertex v2;
+	private Vertex vLeft;
+	private Vertex vRight;
 	private int weight;
 	
 	/**
@@ -21,10 +21,10 @@ public class Edge {
 	 */
 	public Edge() {}
 	
-	public Edge(Vertex v1, Vertex v2, int weight)
+	public Edge(Vertex vLeft, Vertex vRight, int weight)
 	{
-		this.v1 = v1;
-		this.v2 = v2;
+		this.vLeft = vLeft;
+		this.vRight = vRight;
 		this.weight = weight;
 	}
 	
@@ -39,12 +39,75 @@ public class Edge {
 	 */
 	public Vertex GetConnectedVertex(Vertex v)
 	{
-		if (v == v1)
-			return v2;
-		else if (v == v2)
-			return v1;
+		if (v == vLeft)
+			return vRight;
+		else if (v == vRight)
+			return vLeft;
 		else
 			return null;
+	}
+	
+	/**
+	 * LessThan()
+	 * 
+	 * Compares this edge to the one passed in. This is to be
+	 * used in the event that two edges are of the same weight.
+	 * 
+	 * @return - true if this edge is "less than" the one passed in.
+	 */
+	public boolean LessThan(Edge e)
+	{
+		if (vLeft.GetName() < e.GetLeftVertex().GetName())
+		{
+			return true;
+		}
+		else if (vLeft.GetName() == e.GetLeftVertex().GetName())
+		{
+			if (vRight.GetName() < e.GetRightVertex().GetName())
+				return true;
+			else
+				return false;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	
+	/**
+	 * GetWeight()
+	 * 
+	 * Gets the weight of the edge.
+	 * 
+	 * @return - the weight of the edge.
+	 */
+	public int GetWeight()
+	{
+		return weight;
+	}
+	
+	/**
+	 * GetLeftVertex()
+	 * 
+	 * Gets the left vertex (v1).
+	 * 
+	 * @return - the left vertex (v1).
+	 */
+	public Vertex GetLeftVertex()
+	{
+		return vLeft;
+	}
+	
+	/**
+	 * GetRightVertex()
+	 * 
+	 * Gets the right vertex (v2).
+	 * 
+	 * @return - the right vertex (v2).
+	 */
+	public Vertex GetRightVertex()
+	{
+		return vRight;
 	}
 	
 }
