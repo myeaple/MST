@@ -17,10 +17,10 @@ public class Graph {
 	private long seed = 0;
 	private double p = 0.0;
 	
-//	private ArrayList<Vertex> gAdjList;
 	private Vertex[] vertices;
 	private ArrayList<ArrayList<Integer>> gAdjList;
 	private long[][] gMatrix;
+	private ArrayList<Edge> edges;
 	
 	private int[] predecessors;
 	
@@ -51,7 +51,7 @@ public class Graph {
 		vertices = new Vertex[this.numVertices];
 		gAdjList = new ArrayList<ArrayList<Integer>>();
 		gMatrix = new long[this.numVertices][this.numVertices];
-		
+		edges = new ArrayList<Edge>();
 		
 		Generate();
 	}

@@ -17,6 +17,7 @@ public class Vertex {
 	// another by the name of the other vertex.
 	// K: otherVertex -> V: weight of edge
 	private HashMap<Integer, Long> weightByVertexName;
+	private Edge edge;
 	private boolean visited;
 	
 	public Vertex(){ }
