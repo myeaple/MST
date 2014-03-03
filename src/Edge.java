@@ -60,27 +60,42 @@ public class Edge {
 		// First, compare the weights.
 		if (weight < e.getWeight())
 		{
+			// This weight < weight of e.
 			return true;
 		}
-		else
+		else if (weight == e.getWeight())
 		{
-			// Else, compare the left vertex name.
+			// If weights are equivalent, compare the left vertex name.
 			if (vLeft.getName() < e.getLeftVertex().getName())
 			{
+				// This left vertex name < e's left vertex name.
 				return true;
 			}
 			else if (vLeft.getName() == e.getLeftVertex().getName())
 			{
-				// Else, compare the right vertex name.
+				// If the left vertex names are equivalent,
+				// compare the right vertex name.
 				if (vRight.getName() < e.getRightVertex().getName())
+				{
+					// This right vertex name < e's right vertex name.
 					return true;
+				}
 				else
+				{
+					// This right vertex name > e's right vertex name.
 					return false;
+				}
 			}
 			else
 			{
+				// This left vertex name > e's left vertex name.
 				return false;
 			}
+		}
+		else
+		{
+			// This weight > weight of e
+			return false;
 		}
 	}
 	

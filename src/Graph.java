@@ -389,7 +389,7 @@ public class Graph {
 		}
 		r = max + 1;
 		
-		count = new int[r];
+		count = new int[r + 1];
 		
 		// Fill the count array.
 		for (int i = 0; i < a.length; i++)
@@ -484,8 +484,8 @@ public class Graph {
 	 * @param hi - the index of the high value in a.
 	 */
 	private void quickSort(Edge[] a, int lo, int hi)
-	{
-		if (hi == lo) return;
+	{		
+		if (hi <= lo) return;
 		int j = partition(a, lo, hi);
 		quickSort(a, lo, j - 1);
 		quickSort(a, j+1, hi);
@@ -510,7 +510,7 @@ public class Graph {
 		{
 			while (a[++i].lessThan(a[lo]))
 				if (i == hi) break;
-			
+				
 			while (a[lo].lessThan(a[--j]))
 				if (j == lo) break;
 			
@@ -551,8 +551,9 @@ public class Graph {
 		Random rand = new Random();
 		for (int i = 0; i < a.length; i++)
 		{
-			int r = i + rand.nextInt(a.length - 1);
-			swap(a, i, r);
+			int r = rand.nextInt(a.length - 1);
+			if (i != r)
+				swap(a, i, r);
 		}
 	}
 	
@@ -681,7 +682,7 @@ public class Graph {
 		}
 		
 		System.out.printf("\nTotal weight = %d\n", totalWeight);
-		System.out.printf("Runtime: %d milliseconds", runtime);
+		System.out.printf("Runtime: %d milliseconds\n", runtime);
 	}
 	
 	/**
