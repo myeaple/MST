@@ -57,20 +57,30 @@ public class Edge {
 	 */
 	public boolean lessThan(Edge e)
 	{
-		if (vLeft.getName() < e.getLeftVertex().getName())
+		// First, compare the weights.
+		if (weight < e.getWeight())
 		{
 			return true;
 		}
-		else if (vLeft.getName() == e.getLeftVertex().getName())
-		{
-			if (vRight.getName() < e.getRightVertex().getName())
-				return true;
-			else
-				return false;
-		}
 		else
 		{
-			return false;
+			// Else, compare the left vertex name.
+			if (vLeft.getName() < e.getLeftVertex().getName())
+			{
+				return true;
+			}
+			else if (vLeft.getName() == e.getLeftVertex().getName())
+			{
+				// Else, compare the right vertex name.
+				if (vRight.getName() < e.getRightVertex().getName())
+					return true;
+				else
+					return false;
+			}
+			else
+			{
+				return false;
+			}
 		}
 	}
 	

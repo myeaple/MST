@@ -108,16 +108,8 @@ public class MST {
 		g.printAdjacencyMatrix();
 		g.printAdjacencyList();
 		g.printDFSInfo();
-	}
-	
-	/**
-	 * printDivider()
-	 * 
-	 * Prints a divider for breaking up sections of the program output.
-	 */
-	private static void printDivider()
-	{
-		System.out.println("===================================");
+		
+		g.performEdgeSorts();
 	}
 	
 	/**

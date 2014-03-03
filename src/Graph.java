@@ -27,6 +27,16 @@ public class Graph {
 	// Amount of time it took to generate the graph, in milliseconds.
 	private long generationTime = 0;
 	
+	// Sort times for the adjacency list.
+	private long quickSortListTime = 0;
+	private long insertionSortListTime = 0;
+	private long countSortListTime = 0;
+	
+	// Sort times for the matrix.
+	private long quickSortMatrixTime = 0;
+	private long insertionSortMatrixTime = 0;
+	private long countSortMatrixTime = 0;
+	
 	/*
 	 * Do NOT use the default constructor. Instead, use the specific
 	 * constructor.
@@ -230,6 +240,68 @@ public class Graph {
 		return vNext;
 	}
 	
+	/**
+	 * performEdgeSorts()
+	 * 
+	 * Performs insertion, count, and quick sort on the edges of the graph
+	 * for both the matrix and the adjacency list, and prints the
+	 * results.
+	 */
+	public void performEdgeSorts()
+	{
+		final String adjListRepStr = "LIST";
+		final String matrixRepStr = "MATRIX";
+		
+		final String countSortStr = "COUNT SORT";
+		final String quickSortStr = "QUICKSORT";
+		final String insertionSortStr = "INSERTION SORT";
+		
+		// Matrix sorts...
+		printDivider();
+		printSortedEdges(
+				insertionSortMatrix(), 
+				matrixRepStr, 
+				insertionSortStr,
+				insertionSortMatrixTime);
+		
+		printDivider();
+		printSortedEdges(
+				countSortMatrix(), 
+				matrixRepStr, 
+				countSortStr,
+				countSortMatrixTime);
+		
+		printDivider();
+		printSortedEdges(
+				quickSortMatrix(), 
+				matrixRepStr, 
+				quickSortStr,
+				quickSortMatrixTime);
+		
+		// Adjacency List sorts...
+		printDivider();
+		printSortedEdges(
+				insertionSortList(), 
+				adjListRepStr, 
+				insertionSortStr,
+				insertionSortListTime);
+		
+		printDivider();
+		printSortedEdges(
+				countSortList(), 
+				adjListRepStr, 
+				countSortStr,
+				countSortListTime);
+		
+		printDivider();
+		printSortedEdges(
+				quickSortList(), 
+				adjListRepStr, 
+				quickSortStr,
+				quickSortListTime);
+		
+	}
+	
 	/* ---------------- Edge Sorting Functions ---------------- */
 	
 	/**
@@ -242,9 +314,27 @@ public class Graph {
 	 */
 	public Edge[] insertionSortList()
 	{
+		// Time how long it takes to sort the edges.
+		insertionSortListTime = System.currentTimeMillis();
 		
+		Edge[] a = (Edge[])edges.toArray();
 		
-		return null;
+		for (int i = 0; i < a.length; i++)
+		{
+			for (int j = i; j > 0; j--)
+			{
+				if (a[j].getWeight() < a[j-1].getWeight())
+				{
+					swap(a, j, j-1);
+				}
+				else break;
+			}
+		}
+		
+		insertionSortListTime = 
+			System.currentTimeMillis() - insertionSortListTime;
+		
+		return a;
 	}
 	
 	/**
@@ -257,7 +347,13 @@ public class Graph {
 	 */
 	public Edge[] insertionSortMatrix()
 	{
+		// Time how long it takes to sort the edges.
+		insertionSortMatrixTime = System.currentTimeMillis();
 		
+		// TODO: Insertion sort on the matrix.
+		
+		insertionSortMatrixTime = 
+			System.currentTimeMillis() - insertionSortMatrixTime;
 		
 		return null;
 	}
@@ -272,7 +368,11 @@ public class Graph {
 	 */
 	public Edge[] countSortList()
 	{
-		Edge[] aux = new Edge[edges.size()];
+		// Time how long it takes to sort the edges.
+		countSortListTime = System.currentTimeMillis();
+		
+		Edge[] a = (Edge[])edges.toArray();
+		Edge[] aux = new Edge[a.length];
 		int count[];
 		int r = 0;
 		
@@ -292,16 +392,19 @@ public class Graph {
 		count = new int[r];
 		
 		// Fill the count array.
-		for (int i = 0; i < edges.size(); i++)
-			count[edges.get(i).getWeight() + 1]++;
+		for (int i = 0; i < a.length; i++)
+			count[a[i].getWeight() + 1]++;
 		
 		// Calculate the sums in the count array.
 		for (int i = 0; i < count.length - 1; i++)
 			count[i + 1] += count[i];
 		
 		// Sort the Edges into the aux array.
-		for (int i = 0; i < edges.size(); i++)
-			aux[count[edges.get(i).getWeight()]++] = edges.get(i);
+		for (int i = 0; i < a.length; i++)
+			aux[count[a[i].getWeight()]++] = a[i];
+		
+		countSortListTime = 
+			System.currentTimeMillis() - countSortListTime;
 		
 		return aux;
 	}
@@ -316,38 +419,15 @@ public class Graph {
 	 */
 	public Edge[] countSortMatrix()
 	{
-		Edge[] aux = new Edge[edges.size()];
-		int count[];
-		int r = 0;
+		// Time how long it takes to sort the edges.
+		countSortMatrixTime = System.currentTimeMillis();
 		
-//		// Determine the max weight (R).
-//		int max = 0;
-//		for (int i = 0; i < gMatrix.length; i++)
-//		{
-//			for (int j = 0; j < gMatrix[i].length; j++)
-//			{
-//				// Do I need a "created" data structure
-//				// to keep track of created edges so that
-//				// I don't end up with duplicates?
-//			}
-//		}
-//		r = max + 1;
-//		
-//		count = new int[r];
-//		
-//		// Fill the count array.
-//		for (int i = 0; i < edges.size(); i++)
-//			count[edges.get(i).getWeight() + 1]++;
-//		
-//		// Calculate the sums in the count array.
-//		for (int i = 0; i < count.length - 1; i++)
-//			count[i + 1] += count[i];
-//		
-//		// Sort the Edges into the aux array.
-//		for (int i = 0; i < edges.size(); i++)
-//			aux[count[edges.get(i).getWeight()]++] = edges.get(i);
+		// TODO: Perform count sort on the matrix.
 		
-		return aux;
+		countSortMatrixTime = 
+			System.currentTimeMillis() - countSortMatrixTime;
+		
+		return null; // return aux;
 	}
 	
 	/**
@@ -360,9 +440,18 @@ public class Graph {
 	 */
 	public Edge[] quickSortList()
 	{
+		// Time how long it takes to sort the edges.
+		quickSortListTime = System.currentTimeMillis();
 		
+		Edge[] a = (Edge[])edges.toArray();
 		
-		return null;
+		shuffle(a);
+		quickSort(a, 0, a.length - 1);
+		
+		quickSortListTime = 
+			System.currentTimeMillis() - quickSortListTime;
+		
+		return a;
 	}
 	
 	/**
@@ -375,64 +464,97 @@ public class Graph {
 	 */
 	public Edge[] quickSortMatrix()
 	{
+		// Time how long it takes to sort the edges.
+		quickSortMatrixTime = System.currentTimeMillis();
 		
+		quickSortMatrixTime = 
+			System.currentTimeMillis() - quickSortMatrixTime;
 		
 		return null;
 	}
 	
-//	/**
-//	 * quickSort()
-//	 * 
-//	 * Applies a quick sort by name to the given list of vertices.
-//	 * 
-//	 * @param vertices - the vertices to be sorted by name.
-//	 */
-//	private ArrayList<Vertex> quickSort(ArrayList<Vertex> vertices)
-//	{
-//		if(vertices.size() == 1)
-//		{
-//			return vertices;
-//		}
-//		
-//		int mid = (int) Math.ceil((double)vertices.size() / 2);
-//		Vertex pivot = vertices.get(mid);
-//		
-//		ArrayList<Vertex> smaller = new ArrayList<Vertex>();
-//		ArrayList<Vertex> greater = new ArrayList<Vertex>();
-//		
-//		for (int i = 0; i < vertices.size(); i++)
-//		{
-//			if (vertices.get(i).GetName() <= pivot.GetName())
-//			{
-//				// Skip the middle vertex that we are sorting around.
-//				if (i == mid)
-//				{
-//					continue;
-//				}
-//				smaller.add(vertices.get(i));
-//			}
-//			else
-//			{
-//				greater.add(vertices.get(i));
-//			}
-//		}
-//		
-//		ArrayList<Vertex> sorted = new ArrayList<Vertex>();
-//		
-//		for (int i = 0; i < smaller.size(); i++)
-//		{
-//			sorted.add(smaller.get(i));
-//		}
-//		
-//		sorted.add(pivot);
-//		
-//		for (int i = 0; i < greater.size(); i++)
-//		{
-//			sorted.add(greater.get(i));
-//		}
-//		
-//		return sorted;
-//	}
+	/**
+	 * quickSort()
+	 * 
+	 * The recursive function to actually perform the quicksort
+	 * on the list of edges.
+	 * 
+	 * @param a - the list of edges to be sorted.
+	 * @param lo - the index of the low value in a.
+	 * @param hi - the index of the high value in a.
+	 */
+	private void quickSort(Edge[] a, int lo, int hi)
+	{
+		if (hi == lo) return;
+		int j = partition(a, lo, hi);
+		quickSort(a, lo, j - 1);
+		quickSort(a, j+1, hi);
+	}
+	
+	/**
+	 * partition()
+	 * 
+	 * Performs the partitioning for quick sort.
+	 * 
+	 * @param a - the array of Edges to be sorted.
+	 * @param lo - the low value in the array.
+	 * @param hi - the high value in the array.
+	 * @return - the index of the item which is now in place.
+	 */
+	private int partition(Edge[] a, int lo, int hi)
+	{
+		int i = lo;
+		int j = hi + 1;
+		
+		while(true)
+		{
+			while (a[++i].lessThan(a[lo]))
+				if (i == hi) break;
+			
+			while (a[lo].lessThan(a[--j]))
+				if (j == lo) break;
+			
+			if (i >= j) break;
+			swap(a, i, j);
+		}
+		
+		swap(a, lo, j);
+		return j;
+	}
+	
+	/* ---------------- Sort Helper Functions ---------------- */
+	
+	/**
+	 * swap()
+	 * 
+	 * Swaps two elements in the given array.
+	 * 
+	 * @param arr - the array whose elements you want to swap.
+	 * @param i, j - the position of one of the elements to swap
+	 */
+	private void swap(Edge[] arr, int i, int j)
+	{
+		Edge temp = arr[j];
+		arr[j] = arr[i];
+		arr[i] = temp;
+	}
+	
+	/**
+	 * shuffle()
+	 * 
+	 * Shuffles an array of Edges using a Knuth shuffle.
+	 * 
+	 * @param a - the array of Edges you want to shuffle.
+	 */
+	private void shuffle(Edge[] a)
+	{
+		Random rand = new Random();
+		for (int i = 0; i < a.length; i++)
+		{
+			int r = i + rand.nextInt(a.length - 1);
+			swap(a, i, r);
+		}
+	}
 	
 	/* ---------------- Print Functions ---------------- */
 	/**
@@ -525,6 +647,51 @@ public class Graph {
 		System.out.println(verticesStr);
 		System.out.println("Predecessors:");
 		System.out.println(predecessorsStr);
+	}
+	
+	/**
+	 * printSortedEdges()
+	 * 
+	 * Prints an array of sorted edges, along with relevant info.
+	 * 
+	 * @param a - the array of sorted edges.
+	 * @param gRep - graph representation upon which the sort was performed.
+	 * @param sortName - name of the sort (all caps) used.
+	 * @param runtime - runtime of the sort (stored in private vars upon sort).
+	 */
+	public void printSortedEdges(
+			Edge[] a, 
+			String gRep, 
+			String sortName, 
+			long runtime)
+	{
+		System.out.printf("SORTED EDGES WITH %s USING %s\n",
+				gRep,
+				sortName);
+		
+		int totalWeight = 0;
+		for (int i = 0; i < a.length; i++)
+		{
+			totalWeight += a[i].getWeight();
+			
+			System.out.printf("%d %d weight = %d\n", 
+					a[i].getLeftVertex(), 
+					a[i].getRightVertex(), 
+					a[i].getWeight());
+		}
+		
+		System.out.printf("\nTotal weight = %d\n", totalWeight);
+		System.out.printf("Runtime: %d milliseconds", runtime);
+	}
+	
+	/**
+	 * printDivider()
+	 * 
+	 * Prints a divider for breaking up sections of the program output.
+	 */
+	private void printDivider()
+	{
+		System.out.println("===================================");
 	}
 	
 	/* ---------------- Reset Functions ---------------- */
