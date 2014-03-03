@@ -35,7 +35,7 @@ public class Vertex {
 	}
 	
 	/**
-	 * AddEdge()
+	 * addEdge()
 	 * 
 	 * Adds a new edge connected to the provided vertex with the
 	 * provided weight.
@@ -43,9 +43,9 @@ public class Vertex {
 	 * @param vNew - the vertex to connect to via the new edge.
 	 * @param weight - the weight of the edge connecting the two vertices.
 	 */
-	public void AddEdge(Vertex vNew, long weight) throws VertexException
+	public void addEdge(Vertex vNew, long weight) throws VertexException
 	{
-		int vName = vNew.GetName();
+		int vName = vNew.getName();
 		
 		if (!weightByVertexName.containsKey(vName))
 		{
@@ -58,81 +58,81 @@ public class Vertex {
 	}
 	
 	/**
-	 * AddEdge()
+	 * addEdge()
 	 * 
 	 * Adds a new edge to the Vertex.
 	 * 
 	 * @param eNew - the edge to be added to the Vertex.
 	 */
-	public void AddEdge(Edge eNew)
+	public void addEdge(Edge eNew)
 	{
 		edges.add(eNew);
 	}
 	
 	/**
-	 * Visit()
+	 * visit()
 	 * 
 	 * Marks the current node as visited.
 	 */
-	public void Visit()
+	public void visit()
 	{
 		visited = true;
 	}
 	
 	/**
-	 * Reset()
+	 * reset()
 	 * 
 	 * Marks the current node as not visited.
 	 */
-	public void Reset()
+	public void reset()
 	{
 		visited = false;
 	}
 	
 	/**
-	 * IsVisited()
+	 * isVisited()
 	 * 
 	 * Returns true if the vertex has already been visited.
 	 * 
 	 * @return - true: vertex has been visited; false: vertex not visited.
 	 */
-	public boolean IsVisited()
+	public boolean isVisited()
 	{
 		return visited;
 	}
 	
 	/**
-	 * NameToString()
+	 * nameToString()
 	 * 
 	 * Returns the "name" of the vertex as a string.
 	 * 
 	 * @return - the "name" of the vertex.
 	 */
-	public String NameToString()
+	public String nameToString()
 	{
 		return Integer.toString(name);
 	}
 	
 	/**
-	 * GetName()
+	 * getName()
 	 * 
 	 * Returns the name of the string as an int.
 	 * 
 	 * @return - the name of the string as an int.
 	 */
-	public int GetName()
+	public int getName()
 	{
 		return name;
 	}
 	
 	/**
-	 * GetEdges()
+	 * getEdges()
 	 * 
 	 * Returns the connected vertices mapped to the weights.
 	 * 
 	 * @return - a hashmap of the weight of each edge by the vertex name.
 	 */
-	public HashMap<Integer, Long> GetEdges()
+	public HashMap<Integer, Long> getEdgeMap()
 	{
 		return weightByVertexName;
 	}

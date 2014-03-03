@@ -65,31 +65,31 @@ public class MST {
 			
 			br.close();
 		} catch (FileNotFoundException e) {
-			ExitWithMessage("Input file not found");
+			exitWithMessage("Input file not found");
 		} catch (NumberFormatException e) {
 			// Line number will tell us which message to show.
 			switch (lineNum)
 			{
 				case(0): // Number of vertices
 				case(1): // Seed number
-					ExitWithMessage("n and seed must be integers");
+					exitWithMessage("n and seed must be integers");
 					break;
 				
 				// Probability
 				case(2):
-					ExitWithMessage("p must be a real number");
+					exitWithMessage("p must be a real number");
 					break;
 			}
 		} catch (IOException e) {
-			ExitWithError(e);
+			exitWithError(e);
 		}
 		
 		// Check for other input error conditions
 		if (numVertices < 2)
-			ExitWithMessage("n must be greater than 1");
+			exitWithMessage("n must be greater than 1");
 		
 		if (p < 0 || p > 1)
-			ExitWithMessage("p must be between 0 and 1");
+			exitWithMessage("p must be between 0 and 1");
 		
 		// Build the graph
 		Graph g = new Graph(numVertices, seed, p);
@@ -102,29 +102,45 @@ public class MST {
 		
 		System.out.println(String.format(
 				"Time to generate the graph: %s milliseconds",
-				Long.toString(g.GetGenerationTime())
+				Long.toString(g.getGenerationTime())
 				));
 		
-		g.PrintAdjacencyMatrix();
-		g.PrintAdjacencyList();
-		g.PrintDFSInfo();
+		g.printAdjacencyMatrix();
+		g.printAdjacencyList();
+		g.printDFSInfo();
 	}
 	
+	/**
+	 * printDivider()
+	 * 
+	 * Prints a divider for breaking up sections of the program output.
+	 */
+	private static void printDivider()
+	{
+		System.out.println("===================================");
+	}
 	
-	private static void ExitWithMessage(String message)
+	/**
+	 * exitWithMessage()
+	 * 
+	 * Exits and prints the message passed in when called.
+	 * 
+	 * @param message - the message to print upon exiting.
+	 */
+	private static void exitWithMessage(String message)
 	{
 		System.out.println(message);
 		System.exit(1);
 	}
 	
 	/**
-	 * ExitWithError()
+	 * exitWithError()
 	 * 
 	 * Exits and prints an exception's error message to err when called.
 	 * 
 	 * @param e - the caught exception.
 	 */
-	public static void ExitWithError(Exception e)
+	public static void exitWithError(Exception e)
 	{
 		System.err.println(String.format("Error: {0}", e.getMessage()));
 		System.exit(1);
