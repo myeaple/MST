@@ -257,26 +257,26 @@ public class Graph {
 		final String insertionSortStr = "INSERTION SORT";
 		
 		// Matrix sorts...
-		printDivider();
-		printSortedEdges(
-				insertionSortMatrix(), 
-				matrixRepStr, 
-				insertionSortStr,
-				insertionSortMatrixTime);
-		
-		printDivider();
-		printSortedEdges(
-				countSortMatrix(), 
-				matrixRepStr, 
-				countSortStr,
-				countSortMatrixTime);
-		
-		printDivider();
-		printSortedEdges(
-				quickSortMatrix(), 
-				matrixRepStr, 
-				quickSortStr,
-				quickSortMatrixTime);
+//		printDivider();
+//		printSortedEdges(
+//				insertionSortMatrix(), 
+//				matrixRepStr, 
+//				insertionSortStr,
+//				insertionSortMatrixTime);
+//		
+//		printDivider();
+//		printSortedEdges(
+//				countSortMatrix(), 
+//				matrixRepStr, 
+//				countSortStr,
+//				countSortMatrixTime);
+//		
+//		printDivider();
+//		printSortedEdges(
+//				quickSortMatrix(), 
+//				matrixRepStr, 
+//				quickSortStr,
+//				quickSortMatrixTime);
 		
 		// Adjacency List sorts...
 		printDivider();
@@ -317,7 +317,7 @@ public class Graph {
 		// Time how long it takes to sort the edges.
 		insertionSortListTime = System.currentTimeMillis();
 		
-		Edge[] a = (Edge[])edges.toArray();
+		Edge[] a = edges.toArray(new Edge[edges.size()]);
 		
 		for (int i = 0; i < a.length; i++)
 		{
@@ -371,7 +371,7 @@ public class Graph {
 		// Time how long it takes to sort the edges.
 		countSortListTime = System.currentTimeMillis();
 		
-		Edge[] a = (Edge[])edges.toArray();
+		Edge[] a = edges.toArray(new Edge[edges.size()]);
 		Edge[] aux = new Edge[a.length];
 		int count[];
 		int r = 0;
@@ -443,7 +443,7 @@ public class Graph {
 		// Time how long it takes to sort the edges.
 		quickSortListTime = System.currentTimeMillis();
 		
-		Edge[] a = (Edge[])edges.toArray();
+		Edge[] a = edges.toArray(new Edge[edges.size()]);
 		
 		shuffle(a);
 		quickSort(a, 0, a.length - 1);
