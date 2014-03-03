@@ -675,8 +675,8 @@ public class Graph {
 			totalWeight += a[i].getWeight();
 			
 			System.out.printf("%d %d weight = %d\n", 
-					a[i].getLeftVertex(), 
-					a[i].getRightVertex(), 
+					a[i].getLeftVertex().getName(), 
+					a[i].getRightVertex().getName(), 
 					a[i].getWeight());
 		}
 		
