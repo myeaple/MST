@@ -322,7 +322,15 @@ public class Graph {
 		
 //		// Determine the max weight (R).
 //		int max = 0;
-//		
+//		for (int i = 0; i < gMatrix.length; i++)
+//		{
+//			for (int j = 0; j < gMatrix[i].length; j++)
+//			{
+//				// Do I need a "created" data structure
+//				// to keep track of created edges so that
+//				// I don't end up with duplicates?
+//			}
+//		}
 //		r = max + 1;
 //		
 //		count = new int[r];
