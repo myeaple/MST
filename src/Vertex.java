@@ -126,7 +126,7 @@ public class Vertex {
 	}
 	
 	/**
-	 * getEdges()
+	 * getEdgeMap()
 	 * 
 	 * Returns the connected vertices mapped to the weights.
 	 * 
@@ -135,6 +135,18 @@ public class Vertex {
 	public HashMap<Integer, Long> getEdgeMap()
 	{
 		return weightByVertexName;
+	}
+	
+	/**
+	 * getEdges()
+	 * 
+	 * Returns the edges connected to this Vertex.
+	 * 
+	 * @return - an ArrayList of the edges connected to this Vertex.
+	 */
+	public ArrayList<Edge> getEdges()
+	{
+		return edges;
 	}
 	
 }

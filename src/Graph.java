@@ -19,23 +19,14 @@ public class Graph {
 	
 	private Vertex[] vertices;
 	private ArrayList<ArrayList<Integer>> gAdjList;
+	private ArrayList<ArrayList<Vertex>> adjList;
 	private ArrayList<Edge> edges; // Edges in the adjacency list.
-	private long[][] gMatrix;
+	private int[][] gMatrix;
 	
 	private int[] predecessors;
 	
 	// Amount of time it took to generate the graph, in milliseconds.
 	private long generationTime = 0;
-	
-	// Sort times for the adjacency list.
-	private long quickSortListTime = 0;
-	private long insertionSortListTime = 0;
-	private long countSortListTime = 0;
-	
-	// Sort times for the matrix.
-	private long quickSortMatrixTime = 0;
-	private long insertionSortMatrixTime = 0;
-	private long countSortMatrixTime = 0;
 	
 	/*
 	 * Do NOT use the default constructor. Instead, use the specific
@@ -115,6 +106,8 @@ public class Graph {
 					// Add the edge to both vertices in our adjacency list.
 					gAdjList.get(i).add(j);
 					gAdjList.get(j).add(i);
+//					adjList.get(i).add(vertices[j]);
+//					adjList.get(j).add(vertices[i]);
 					
 					// Add the weighted edge to our matrix.
 					gMatrix[i][j] = weight;
@@ -256,306 +249,54 @@ public class Graph {
 		final String quickSortStr = "QUICKSORT";
 		final String insertionSortStr = "INSERTION SORT";
 		
+		Sort iSort = new InsertionSort();
+		Sort cSort = new CountSort();
+		Sort qSort = new QuickSort();
+		
 		// Matrix sorts...
-//		printDivider();
-//		printSortedEdges(
-//				insertionSortMatrix(), 
-//				matrixRepStr, 
-//				insertionSortStr,
-//				insertionSortMatrixTime);
-//		
-//		printDivider();
-//		printSortedEdges(
-//				countSortMatrix(), 
-//				matrixRepStr, 
-//				countSortStr,
-//				countSortMatrixTime);
-//		
-//		printDivider();
-//		printSortedEdges(
-//				quickSortMatrix(), 
-//				matrixRepStr, 
-//				quickSortStr,
-//				quickSortMatrixTime);
+		printDivider();
+		printSortedEdges(
+				iSort.sort(gMatrix), 
+				matrixRepStr, 
+				insertionSortStr,
+				iSort.getSortTimeMatrix());
+		
+		printDivider();
+		printSortedEdges(
+				cSort.sort(gMatrix), 
+				matrixRepStr, 
+				countSortStr,
+				cSort.getSortTimeMatrix());
+		
+		printDivider();
+		printSortedEdges(
+				qSort.sort(gMatrix), 
+				matrixRepStr, 
+				quickSortStr,
+				qSort.getSortTimeMatrix());
 		
 		// Adjacency List sorts...
 		printDivider();
 		printSortedEdges(
-				insertionSortList(), 
+				iSort.sort(adjList), 
 				adjListRepStr, 
 				insertionSortStr,
-				insertionSortListTime);
+				iSort.getSortTimeList());
 		
 		printDivider();
 		printSortedEdges(
-				countSortList(), 
+				cSort.sort(adjList), 
 				adjListRepStr, 
 				countSortStr,
-				countSortListTime);
+				cSort.getSortTimeList());
 		
 		printDivider();
 		printSortedEdges(
-				quickSortList(), 
+				qSort.sort(adjList), 
 				adjListRepStr, 
 				quickSortStr,
-				quickSortListTime);
-		
-	}
-	
-	/* ---------------- Edge Sorting Functions ---------------- */
-	
-	/**
-	 * insertionSortList()
-	 * 
-	 * Performs an insertion sort on the edges of the graph from the
-	 * adjacency list and returns the sorted list.
-	 * 
-	 * @return - the sorted list of edges.
-	 */
-	public Edge[] insertionSortList()
-	{
-		// Time how long it takes to sort the edges.
-		insertionSortListTime = System.currentTimeMillis();
-		
-		Edge[] a = edges.toArray(new Edge[edges.size()]);
-		
-		for (int i = 0; i < a.length; i++)
-		{
-			for (int j = i; j > 0; j--)
-			{
-				if (a[j].getWeight() < a[j-1].getWeight())
-				{
-					swap(a, j, j-1);
-				}
-				else break;
-			}
-		}
-		
-		insertionSortListTime = 
-			System.currentTimeMillis() - insertionSortListTime;
-		
-		return a;
-	}
-	
-	/**
-	 * insertionSortMatrix()
-	 * 
-	 * Performs an insertion sort on the edges of the graph from the
-	 * matrix and returns the sorted list.
-	 * 
-	 * @return - the sorted list of edges.
-	 */
-	public Edge[] insertionSortMatrix()
-	{
-		// Time how long it takes to sort the edges.
-		insertionSortMatrixTime = System.currentTimeMillis();
-		
-		// TODO: Insertion sort on the matrix.
-		
-		insertionSortMatrixTime = 
-			System.currentTimeMillis() - insertionSortMatrixTime;
-		
-		return null;
-	}
-	
-	/**
-	 * countSortList()
-	 * 
-	 * Performs a count sort on the edges of the graph from the 
-	 * adjacency list and returns the sorted list.
-	 * 
-	 * @return - the sorted list of edges.
-	 */
-	public Edge[] countSortList()
-	{
-		// Time how long it takes to sort the edges.
-		countSortListTime = System.currentTimeMillis();
-		
-		Edge[] a = edges.toArray(new Edge[edges.size()]);
-		Edge[] aux = new Edge[a.length];
-		int count[];
-		int r = 0;
-		
-		// Determine the max weight (R).
-		int max = 0;
-		Iterator<Edge> iter = edges.iterator();
-		while(iter.hasNext())
-		{
-			Edge current = iter.next();
-			int weight = current.getWeight();
-			
-			if (max < weight)
-				max = weight;
-		}
-		r = max + 1;
-		
-		count = new int[r + 1];
-		
-		// Fill the count array.
-		for (int i = 0; i < a.length; i++)
-			count[a[i].getWeight() + 1]++;
-		
-		// Calculate the sums in the count array.
-		for (int i = 0; i < count.length - 1; i++)
-			count[i + 1] += count[i];
-		
-		// Sort the Edges into the aux array.
-		for (int i = 0; i < a.length; i++)
-			aux[count[a[i].getWeight()]++] = a[i];
-		
-		countSortListTime = 
-			System.currentTimeMillis() - countSortListTime;
-		
-		return aux;
-	}
-	
-	/**
-	 * countSortMatrix()
-	 * 
-	 * Performs a count sort on the edges of the graph from the 
-	 * matrix and returns the sorted list.
-	 * 
-	 * @return - the sorted list of edges.
-	 */
-	public Edge[] countSortMatrix()
-	{
-		// Time how long it takes to sort the edges.
-		countSortMatrixTime = System.currentTimeMillis();
-		
-		// TODO: Perform count sort on the matrix.
-		
-		countSortMatrixTime = 
-			System.currentTimeMillis() - countSortMatrixTime;
-		
-		return null; // return aux;
-	}
-	
-	/**
-	 * quickSortList()
-	 * 
-	 * Performs a quick sort on the edges of the graph from the
-	 * adjacency list and returns the sorted list.
-	 * 
-	 * @return - the sorted list of edges.
-	 */
-	public Edge[] quickSortList()
-	{
-		// Time how long it takes to sort the edges.
-		quickSortListTime = System.currentTimeMillis();
-		
-		Edge[] a = edges.toArray(new Edge[edges.size()]);
-		
-		shuffle(a);
-		quickSort(a, 0, a.length - 1);
-		
-		quickSortListTime = 
-			System.currentTimeMillis() - quickSortListTime;
-		
-		return a;
-	}
-	
-	/**
-	 * quickSortMatrix()
-	 * 
-	 * Performs a quick sort on the edges of the graph from the
-	 * matrix and returns the sorted list.
-	 * 
-	 * @return - the sorted list of edges.
-	 */
-	public Edge[] quickSortMatrix()
-	{
-		// Time how long it takes to sort the edges.
-		quickSortMatrixTime = System.currentTimeMillis();
-		
-		quickSortMatrixTime = 
-			System.currentTimeMillis() - quickSortMatrixTime;
-		
-		return null;
-	}
-	
-	/**
-	 * quickSort()
-	 * 
-	 * The recursive function to actually perform the quicksort
-	 * on the list of edges.
-	 * 
-	 * @param a - the list of edges to be sorted.
-	 * @param lo - the index of the low value in a.
-	 * @param hi - the index of the high value in a.
-	 */
-	private void quickSort(Edge[] a, int lo, int hi)
-	{		
-		if (hi <= lo) return;
-		int j = partition(a, lo, hi);
-		quickSort(a, lo, j - 1);
-		quickSort(a, j+1, hi);
-	}
-	
-	/**
-	 * partition()
-	 * 
-	 * Performs the partitioning for quick sort.
-	 * 
-	 * @param a - the array of Edges to be sorted.
-	 * @param lo - the low value in the array.
-	 * @param hi - the high value in the array.
-	 * @return - the index of the item which is now in place.
-	 */
-	private int partition(Edge[] a, int lo, int hi)
-	{
-		int i = lo;
-		int j = hi + 1;
-		
-		while(true)
-		{
-			while (a[++i].lessThan(a[lo]))
-				if (i == hi) break;
-				
-			while (a[lo].lessThan(a[--j]))
-				if (j == lo) break;
-			
-			if (i >= j) break;
-			swap(a, i, j);
-		}
-		
-		swap(a, lo, j);
-		return j;
-	}
-	
-	/* ---------------- Sort Helper Functions ---------------- */
-	
-	/**
-	 * swap()
-	 * 
-	 * Swaps two elements in the given array.
-	 * 
-	 * @param arr - the array whose elements you want to swap.
-	 * @param i, j - the position of one of the elements to swap
-	 */
-	private void swap(Edge[] arr, int i, int j)
-	{
-		Edge temp = arr[j];
-		arr[j] = arr[i];
-		arr[i] = temp;
-	}
-	
-	/**
-	 * shuffle()
-	 * 
-	 * Shuffles an array of Edges using a Knuth shuffle.
-	 * 
-	 * @param a - the array of Edges you want to shuffle.
-	 */
-	private void shuffle(Edge[] a)
-	{
-		Random rand = new Random();
-		for (int i = 0; i < a.length; i++)
-		{
-			int r = rand.nextInt(a.length - 1);
-			if (i != r)
-				swap(a, i, r);
-		}
-	}
+				qSort.getSortTimeList());
+	}	
 	
 	/* ---------------- Print Functions ---------------- */
 	/**
