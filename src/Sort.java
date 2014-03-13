@@ -93,30 +93,20 @@ public abstract class Sort {
 			ArrayList<ArrayList<Integer>> adjList,
 			Vertex[] vertices)
 	{
-		// Using a HashSet to weed out duplicate Edges.
-		HashSet<Edge> edges = new HashSet<Edge>();
+		ArrayList<Edge> edges = new ArrayList<Edge>();
 		
 		for (int i = 0; i < adjList.size(); i++)
 		{
 			for (int j = 0; j < adjList.get(i).size(); j++)
 			{
-				System.out.println("i, j: " + i + " " + j);
-				System.out.println(adjList.get(i).get(j));
 				// Get the edge from each vertex...
 				Edge currEdge = vertices[i].getEdge(adjList.get(i).get(j));
 				
-				// Add the edges to our HashSet.
+				// Add the edges to our ArrayList.
 				// This will ignore duplicate edges.
-				if (currEdge != null)
+				if (currEdge != null && !edges.contains(currEdge))
 					edges.add(currEdge);
 			}
-		}
-		
-		System.out.println("GET EDGES: ");
-		Edge[] arr = new Edge[edges.size()];
-		for (int i = 0; i < edges.size(); i++)
-		{
-			System.out.println(arr[i].toString());
 		}
 		
 		// Convert the HashSet to an array of Edges and return it.
@@ -175,7 +165,7 @@ public abstract class Sort {
 			}
 		}
 		
-		// Convert the HashSet of Edges to an array and return it.
+		// Convert the ArrayList of Edges to an array and return it.
 		return edges.toArray(new Edge[edges.size()]);
 	}
 	
