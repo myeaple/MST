@@ -22,15 +22,18 @@ public abstract class Sort {
 	 * representation of a graph.
 	 * 
 	 * @param adjList - the adjacency list whose edges need to be sorted.
+	 * @param vertices - the vertices in the adjacency list.
 	 * @return - an array of sorted Edges.
 	 */
-	protected Edge[] sort(ArrayList<ArrayList<Vertex>> adjList)
+	protected Edge[] sort(
+			ArrayList<ArrayList<Integer>> adjList, 
+			Vertex[] vertices)
 	{
 		sortTimeList = System.currentTimeMillis();
 		Edge[] result;
 		
 		// Create an array of Edges from the adjacency list.
-		Edge[] a = getEdgesFrom(adjList);
+		Edge[] a = getEdgesFrom(adjList, vertices);
 		
 		// Sort them.
 		result = sort(a);
@@ -86,7 +89,9 @@ public abstract class Sort {
 	 * @param adjList - the adjacency list to get the edges from.
 	 * @return - an array of the Edges in the graph.
 	 */
-	protected Edge[] getEdgesFrom(ArrayList<ArrayList<Vertex>> adjList)
+	protected Edge[] getEdgesFrom(
+			ArrayList<ArrayList<Integer>> adjList,
+			Vertex[] vertices)
 	{
 		// Using a HashSet to weed out duplicate Edges.
 		HashSet<Edge> edges = new HashSet<Edge>();
@@ -95,12 +100,23 @@ public abstract class Sort {
 		{
 			for (int j = 0; j < adjList.get(i).size(); j++)
 			{
-				// Get the edges from each vertex...
-				ArrayList<Edge> currEdges = adjList.get(i).get(j).getEdges();
+				System.out.println("i, j: " + i + " " + j);
+				System.out.println(adjList.get(i).get(j));
+				// Get the edge from each vertex...
+				Edge currEdge = vertices[i].getEdge(adjList.get(i).get(j));
 				
 				// Add the edges to our HashSet.
-				edges.addAll(currEdges);
+				// This will ignore duplicate edges.
+				if (currEdge != null)
+					edges.add(currEdge);
 			}
+		}
+		
+		System.out.println("GET EDGES: ");
+		Edge[] arr = new Edge[edges.size()];
+		for (int i = 0; i < edges.size(); i++)
+		{
+			System.out.println(arr[i].toString());
 		}
 		
 		// Convert the HashSet to an array of Edges and return it.
@@ -120,7 +136,7 @@ public abstract class Sort {
 	{
 		HashMap<Integer, HashSet<Integer>> visited = 
 			new HashMap<Integer, HashSet<Integer>>();
-		HashSet<Edge> edges = new HashSet<Edge>();
+		ArrayList<Edge> edges = new ArrayList<Edge>();
 		
 		for (int i = 0; i < matrix.length; i++)
 		{
@@ -139,7 +155,7 @@ public abstract class Sort {
 					{
 						Vertex left = new Vertex(i);
 						Vertex right = new Vertex(j);
-						
+												
 						// Add the new Edge.
 						edges.add(new Edge(left, right, weight));
 						

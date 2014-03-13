@@ -18,10 +18,8 @@ public class Graph {
 	private double p = 0.0;
 	
 	private Vertex[] vertices;
-	private ArrayList<ArrayList<Integer>> gAdjList;
-	private ArrayList<ArrayList<Vertex>> adjList;
-	private ArrayList<Edge> edges; // Edges in the adjacency list.
-	private int[][] gMatrix;
+	private ArrayList<ArrayList<Integer>> adjList;
+	private int[][] matrix;
 	
 	private int[] predecessors;
 	
@@ -50,9 +48,8 @@ public class Graph {
 		this.p = p;
 		
 		vertices = new Vertex[this.numVertices];
-		gAdjList = new ArrayList<ArrayList<Integer>>();
-		gMatrix = new long[this.numVertices][this.numVertices];
-		edges = new ArrayList<Edge>();
+		adjList = new ArrayList<ArrayList<Integer>>();
+		matrix = new int[this.numVertices][this.numVertices];
 		
 		generate();
 	}
@@ -71,7 +68,7 @@ public class Graph {
 		for (int i = 0; i < numVertices; i++)
 		{
 			vertices[i] = new Vertex(i);
-			gAdjList.add(new ArrayList<Integer>());
+			adjList.add(new ArrayList<Integer>());
 		}
 		
 		Random rConnect = new Random(seed);
@@ -91,27 +88,17 @@ public class Graph {
 					Edge eNew = new Edge(vertices[i], vertices[j], weight);
 					
 					// Add edges to our vertices.
-					try 
-					{
-						vertices[i].addEdge(vertices[j], weight);
-						vertices[j].addEdge(vertices[i], weight);
-						vertices[i].addEdge(eNew);
-						vertices[j].addEdge(eNew);
-						edges.add(eNew);
-					} catch (VertexException e) 
-					{
-						MST.exitWithError(e);
-					}
+					vertices[i].addEdge(eNew);
+					vertices[j].addEdge(eNew);
+					
 					
 					// Add the edge to both vertices in our adjacency list.
-					gAdjList.get(i).add(j);
-					gAdjList.get(j).add(i);
-//					adjList.get(i).add(vertices[j]);
-//					adjList.get(j).add(vertices[i]);
+					adjList.get(i).add(j);
+					adjList.get(j).add(i);
 					
 					// Add the weighted edge to our matrix.
-					gMatrix[i][j] = weight;
-					gMatrix[j][i] = weight;
+					matrix[i][j] = weight;
+					matrix[j][i] = weight;
  				}
 			}
 		}
@@ -220,14 +207,12 @@ public class Graph {
 		ArrayList<Vertex> vNext = new ArrayList<Vertex>();
 		
 		// Map of weights by the connected node name.
-		HashMap<Integer, Long> edges = current.getEdgeMap();
+		ArrayList<Edge> edges = current.getEdges();
+//		HashMap<Integer, Long> edges = current.getEdgeMap();
 		
-		for (int i = 0; i < numVertices; i++)
+		for (int i = 0; i < edges.size(); i++)
 		{
-			if (edges.containsKey(i))
-			{
-				vNext.add(vertices[i]);
-			}
+			vNext.add(edges.get(i).getConnectedVertex(current));
 		}
 		
 		return vNext;
@@ -256,21 +241,21 @@ public class Graph {
 		// Matrix sorts...
 		printDivider();
 		printSortedEdges(
-				iSort.sort(gMatrix), 
+				iSort.sort(matrix), 
 				matrixRepStr, 
 				insertionSortStr,
 				iSort.getSortTimeMatrix());
 		
 		printDivider();
 		printSortedEdges(
-				cSort.sort(gMatrix), 
+				cSort.sort(matrix), 
 				matrixRepStr, 
 				countSortStr,
 				cSort.getSortTimeMatrix());
 		
 		printDivider();
 		printSortedEdges(
-				qSort.sort(gMatrix), 
+				qSort.sort(matrix), 
 				matrixRepStr, 
 				quickSortStr,
 				qSort.getSortTimeMatrix());
@@ -278,21 +263,21 @@ public class Graph {
 		// Adjacency List sorts...
 		printDivider();
 		printSortedEdges(
-				iSort.sort(adjList), 
+				iSort.sort(adjList, vertices), 
 				adjListRepStr, 
 				insertionSortStr,
 				iSort.getSortTimeList());
 		
 		printDivider();
 		printSortedEdges(
-				cSort.sort(adjList), 
+				cSort.sort(adjList, vertices), 
 				adjListRepStr, 
 				countSortStr,
 				cSort.getSortTimeList());
 		
 		printDivider();
 		printSortedEdges(
-				qSort.sort(adjList), 
+				qSort.sort(adjList, vertices), 
 				adjListRepStr, 
 				quickSortStr,
 				qSort.getSortTimeList());
@@ -320,10 +305,10 @@ public class Graph {
 			{
 				String spacing = "   ";
 				
-				if (gMatrix[i][j] == 10)
+				if (matrix[i][j] == 10)
 					spacing = "  ";
 				
-				currLine += spacing + Long.toString(gMatrix[i][j]);
+				currLine += spacing + Long.toString(matrix[i][j]);
 			}
 			
 			System.out.println(currLine);
@@ -342,21 +327,22 @@ public class Graph {
 			return;
 		
 		System.out.println("\nThe graph as an adjacency list:");
-		for (int i = 0; i < gAdjList.size(); i++)
+		for (int i = 0; i < adjList.size(); i++)
 		{
 			Vertex currVertex = vertices[i];
 			
-			HashMap<Integer, Long> edges = currVertex.getEdgeMap();
+			ArrayList<Edge> edges = currVertex.getEdges();
 			
 			String currLine = currVertex.nameToString() + "->";
 			
-			for (int j = 0; j < numVertices; j++)
+			for (int j = 0; j < edges.size(); j++)
 			{
-				if (edges.containsKey(j))
-				{
-					currLine += " " + Integer.toString(j) 
-						+ String.format("(%s)", Long.toString(edges.get(j)));
-				}
+				Edge edge = edges.get(j);
+				currLine += " " 
+					+ Integer.toString(
+							edge.getConnectedVertex(currVertex).getName()
+							) 
+					+ String.format("(%d)", edge.getWeight());
 			}
 			
 			System.out.println(currLine);
@@ -445,7 +431,7 @@ public class Graph {
 	 */
 	private void resetVertices()
 	{
-		for (int i = 0; i < gAdjList.size(); i++)
+		for (int i = 0; i < adjList.size(); i++)
 		{
 			vertices[i].reset();
 		}
@@ -459,14 +445,14 @@ public class Graph {
 	private void resetGraphs()
 	{
 		// Reset the adjacency list.
-		gAdjList = new ArrayList<ArrayList<Integer>>();
+		adjList = new ArrayList<ArrayList<Integer>>();
 		
 		// Reset the matrix.
 		for (int i = 0; i < numVertices; i++)
 		{
 			for (int j = 0; j < numVertices; j++)
 			{
-				gMatrix[i][j] = 0;
+				matrix[i][j] = 0;
 			}
 		}
 	}

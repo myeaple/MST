@@ -13,10 +13,10 @@ import java.util.*;
 public class Vertex {
 	
 	private int name; // Name is a number (i.e. 0, 1, etc.)
-	// weightByInteger represents the weight between this vertex and 
-	// another by the name of the other vertex.
-	// K: otherVertex -> V: weight of edge
-	private HashMap<Integer, Long> weightByVertexName;
+//	// weightByInteger represents the weight between this vertex and 
+//	// another by the name of the other vertex.
+//	// K: otherVertex -> V: weight of edge
+//	private HashMap<Integer, Long> weightByVertexName;
 	private ArrayList<Edge> edges;
 	private boolean visited;
 	
@@ -30,32 +30,32 @@ public class Vertex {
 	public Vertex(int name)
 	{
 		this.name = name;
-		weightByVertexName = new HashMap<Integer, Long>();
+//		weightByVertexName = new HashMap<Integer, Long>();
 		edges = new ArrayList<Edge>();
 	}
 	
-	/**
-	 * addEdge()
-	 * 
-	 * Adds a new edge connected to the provided vertex with the
-	 * provided weight.
-	 * 
-	 * @param vNew - the vertex to connect to via the new edge.
-	 * @param weight - the weight of the edge connecting the two vertices.
-	 */
-	public void addEdge(Vertex vNew, long weight) throws VertexException
-	{
-		int vName = vNew.getName();
-		
-		if (!weightByVertexName.containsKey(vName))
-		{
-			weightByVertexName.put(vName, weight);
-		}
-		else
-		{
-			throw new VertexException("Edge already exists.");
-		}
-	}
+//	/**
+//	 * addEdge()
+//	 * 
+//	 * Adds a new edge connected to the provided vertex with the
+//	 * provided weight.
+//	 * 
+//	 * @param vNew - the vertex to connect to via the new edge.
+//	 * @param weight - the weight of the edge connecting the two vertices.
+//	 */
+//	public void addEdge(Vertex vNew, long weight) throws VertexException
+//	{
+//		int vName = vNew.getName();
+//		
+//		if (!weightByVertexName.containsKey(vName))
+//		{
+//			weightByVertexName.put(vName, weight);
+//		}
+//		else
+//		{
+//			throw new VertexException("Edge already exists.");
+//		}
+//	}
 	
 	/**
 	 * addEdge()
@@ -125,17 +125,17 @@ public class Vertex {
 		return name;
 	}
 	
-	/**
-	 * getEdgeMap()
-	 * 
-	 * Returns the connected vertices mapped to the weights.
-	 * 
-	 * @return - a hashmap of the weight of each edge by the vertex name.
-	 */
-	public HashMap<Integer, Long> getEdgeMap()
-	{
-		return weightByVertexName;
-	}
+//	/**
+//	 * getEdgeMap()
+//	 * 
+//	 * Returns the connected vertices mapped to the weights.
+//	 * 
+//	 * @return - a hashmap of the weight of each edge by the vertex name.
+//	 */
+//	public HashMap<Integer, Long> getEdgeMap()
+//	{
+//		return weightByVertexName;
+//	}
 	
 	/**
 	 * getEdges()
@@ -147,6 +147,25 @@ public class Vertex {
 	public ArrayList<Edge> getEdges()
 	{
 		return edges;
+	}
+	
+	/**
+	 * getEdge()
+	 * 
+	 * Returns the edge with a right vertex of the specified name.
+	 * 
+	 * @param vRightName - the name of the right Vertex on the edge to be found.
+	 * @return - the found Edge (null if not found)
+	 */
+	public Edge getEdge(int vRightName)
+	{
+		for (int i = 0; i < edges.size(); i++)
+		{
+			if (edges.get(i).getRightVertex().getName() == vRightName)
+				return edges.get(i);
+		}
+		
+		return null;
 	}
 	
 }

@@ -135,4 +135,18 @@ public class Edge {
 		return vRight;
 	}
 	
+	/**
+	 * toString()
+	 * 
+	 * Display the Edge as a string.
+	 */
+	@Override
+	public String toString()
+	{
+		return String.format("Left: %d Right: %d Weight: %d, ",
+				vLeft.getName(),
+				vRight.getName(),
+				weight);
+	}
+	
 }
