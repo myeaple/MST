@@ -402,14 +402,17 @@ public class Graph {
 		{
 			totalWeight += a[i].getWeight();
 			
-			System.out.printf("%d %d weight = %d\n", 
-					a[i].getLeftVertex().getName(), 
-					a[i].getRightVertex().getName(), 
-					a[i].getWeight());
+			if (numVertices <= 10)
+			{
+				System.out.printf("%d %d weight = %d\n", 
+						a[i].getLeftVertex().getName(), 
+						a[i].getRightVertex().getName(), 
+						a[i].getWeight());
+			}
 		}
 		
 		System.out.printf("\nTotal weight = %d\n", totalWeight);
-		System.out.printf("Runtime: %d milliseconds\n", runtime);
+		System.out.printf("Runtime: %d milliseconds\n\n", runtime);
 	}
 	
 	/**
