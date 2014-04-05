@@ -13,6 +13,13 @@ public class Graph {
 
 	private final int MIN = 1;
 	
+	private final String adjListRepStr = "LIST";
+	private final String matrixRepStr = "MATRIX";
+	
+	private final String countSortStr = "COUNT SORT";
+	private final String quickSortStr = "QUICKSORT";
+	private final String insertionSortStr = "INSERTION SORT";
+	
 	private int numVertices = 0;
 	private long seed = 0;
 	private double p = 0.0;
@@ -25,6 +32,8 @@ public class Graph {
 	
 	// Amount of time it took to generate the graph, in milliseconds.
 	private long generationTime = 0;
+	
+	private long kruskalTime = 0;
 	
 	/*
 	 * Do NOT use the default constructor. Instead, use the specific
@@ -227,61 +236,257 @@ public class Graph {
 	 */
 	public void performEdgeSorts()
 	{
-		final String adjListRepStr = "LIST";
-		final String matrixRepStr = "MATRIX";
-		
-		final String countSortStr = "COUNT SORT";
-		final String quickSortStr = "QUICKSORT";
-		final String insertionSortStr = "INSERTION SORT";
-		
+		final String actionStr = "SORTED EDGES";
 		Sort iSort = new InsertionSort();
 		Sort cSort = new CountSort();
 		Sort qSort = new QuickSort();
 		
 		// Matrix sorts...
 		printDivider();
-		printSortedEdges(
-				iSort.sort(matrix), 
+		printEdges(
+				iSort.sort(matrix),
+				actionStr,
 				matrixRepStr, 
 				insertionSortStr,
 				iSort.getSortTimeMatrix());
 		
 		printDivider();
-		printSortedEdges(
+		printEdges(
 				cSort.sort(matrix), 
+				actionStr,
 				matrixRepStr, 
 				countSortStr,
 				cSort.getSortTimeMatrix());
 		
 		printDivider();
-		printSortedEdges(
+		printEdges(
 				qSort.sort(matrix), 
+				actionStr,
 				matrixRepStr, 
 				quickSortStr,
 				qSort.getSortTimeMatrix());
 		
 		// Adjacency List sorts...
 		printDivider();
-		printSortedEdges(
+		printEdges(
 				iSort.sort(adjList, vertices), 
+				actionStr,
 				adjListRepStr, 
 				insertionSortStr,
 				iSort.getSortTimeList());
 		
 		printDivider();
-		printSortedEdges(
+		printEdges(
 				cSort.sort(adjList, vertices), 
+				actionStr,
 				adjListRepStr, 
 				countSortStr,
 				cSort.getSortTimeList());
 		
 		printDivider();
-		printSortedEdges(
+		printEdges(
 				qSort.sort(adjList, vertices), 
+				actionStr,
 				adjListRepStr, 
 				quickSortStr,
 				qSort.getSortTimeList());
-	}	
+	}
+	
+	/**
+	 * performKruskal()
+	 * 
+	 * Performs Kruskal's Algorithm to generate an MST using the different
+	 * sorts (Insertion, Count, and Quick) and representations of the Graph
+	 * (Matrix, List) and prints the results.
+	 */
+	public void performKruskal()
+	{
+		final String actionStr = "KRUSKAL";
+		
+		// Kruskal with Matrix...
+		printDivider();
+		printEdges(
+				kruskalMST(SortType.Insertion, GraphType.Matrix),
+				actionStr,
+				matrixRepStr, 
+				insertionSortStr,
+				kruskalTime);
+		
+		printDivider();
+		printEdges(
+				kruskalMST(SortType.Count, GraphType.Matrix), 
+				actionStr,
+				matrixRepStr, 
+				countSortStr,
+				kruskalTime);
+		
+		printDivider();
+		printEdges(
+				kruskalMST(SortType.Quick, GraphType.Matrix), 
+				actionStr,
+				matrixRepStr, 
+				quickSortStr,
+				kruskalTime);
+		
+		// Kruskal with Adjacency List...
+		printDivider();
+		printEdges(
+				kruskalMST(SortType.Insertion, GraphType.List), 
+				actionStr,
+				adjListRepStr, 
+				insertionSortStr,
+				kruskalTime);
+		
+		printDivider();
+		printEdges(
+				kruskalMST(SortType.Count, GraphType.List),  
+				actionStr,
+				adjListRepStr, 
+				countSortStr,
+				kruskalTime);
+		
+		printDivider();
+		printEdges(
+				kruskalMST(SortType.Quick, GraphType.List), 
+				actionStr,
+				adjListRepStr, 
+				quickSortStr,
+				kruskalTime);
+	}
+	
+	/**
+	 * kruskalMST()
+	 * 
+	 * Creates an MST of the graph by using Kruskal's algorithm.
+	 * 
+	 * @return the MST as an array of Edges.
+	 */
+	private Edge[] kruskalMST(SortType sType, GraphType gType)
+	{
+		kruskalTime = System.currentTimeMillis();
+		
+		ArrayList<Edge> mst = new ArrayList<Edge>();
+		
+		// Sort Edges in non-decreasing order by weight.
+		Edge[] sorted = null;
+		Sort iSort = new InsertionSort();
+		Sort cSort = new CountSort();
+		Sort qSort = new QuickSort();
+		
+		switch(sType.getValue())
+		{
+			case 0: // Insertion Sort
+				if (gType == GraphType.Matrix)
+					sorted = iSort.sort(matrix);
+				else
+					sorted = iSort.sort(adjList, vertices);
+				break;
+				
+			case 1: // Count Sort
+				if (gType == GraphType.Matrix)
+					sorted = cSort.sort(matrix);
+				else
+					sorted = cSort.sort(adjList, vertices);
+				break;
+				
+			case 2: // Quick Sort
+				if (gType == GraphType.Matrix)
+					sorted = qSort.sort(matrix);
+				else
+					sorted = qSort.sort(adjList, vertices);
+				break;
+				
+			default: // Shouldn't happen unless I suck at writing code.
+				MST.exitWithMessage("The MST sort type was not specified.");
+				break;
+		}
+		
+		// Initialize a partition structure.
+		int[] partition = new int[numVertices];
+		int[] rank = new int[numVertices];
+		for (int i = 0; i < partition.length; i++)
+		{
+			partition[i] = i; // Set p(v) = v.
+			rank[i] = 0; // All Vertices start with rank of 0.
+		}
+		
+		int includedCount = 0;
+		int index = 0;
+		
+		while (includedCount < numVertices - 1) {
+			if (index >= sorted.length)
+				MST.exitWithMessage("Index is greater than sorted array size.");
+			
+			Edge curr = sorted[index];
+			
+			int u = curr.getLeftVertex().getName();
+			int v = curr.getRightVertex().getName();
+			
+			int root1 = find(u, partition);
+			int root2 = find(v, partition);
+			
+			if (root1 != root2)
+			{
+				//System.out.printf("Added edge: %s %s\n", u, v);
+				
+				// Add edge to MST.
+				mst.add(curr);
+				includedCount++;
+				// Union root1 and root2.
+				union(root1, root2, partition, rank);
+			}
+			
+			index++;
+		}
+		
+		kruskalTime = System.currentTimeMillis() - kruskalTime;
+		
+		return mst.toArray(new Edge[mst.size()]);
+	}
+	
+	/**
+	 * find()
+	 * 
+	 * Performs union find with path compression on the given Vertex.
+	 * 
+	 * @param v - the Vertex to find the root of.
+	 * @param p - the partition to use to find the root of v.
+	 * @return - the Vertex that is the root of v.
+	 */
+	private int find(int v, int[] p)
+	{		
+		// The root is where the parent is itself.
+		if (v != p[v])
+		{
+			p[v] = find(p[v], p);
+		}
+		
+		return p[v];
+	}
+	
+	/**
+	 * union()
+	 * 
+	 * Performs the Union-by-Rank operation on the two given Vertices.
+	 * 
+	 * @param u - one of the Vertices to be unioned.
+	 * @param v - one of the Vertices to be unioned.
+	 * @param p - the partition for the Vertices.
+	 * @param rank - an array of the Vertices' ranks.
+	 */
+	private void union (int u, int v, int[] p, int[] rank)
+	{
+		if (rank[u] > rank[v])
+		{
+			p[v] = u;
+		}
+		else
+		{
+			p[u] = v;
+			if (rank[u] == rank[v])
+				rank[v]++;
+		}
+	}
 	
 	/* ---------------- Print Functions ---------------- */
 	/**
@@ -378,22 +583,25 @@ public class Graph {
 	}
 	
 	/**
-	 * printSortedEdges()
+	 * printEdges()
 	 * 
 	 * Prints an array of sorted edges, along with relevant info.
 	 * 
 	 * @param a - the array of sorted edges.
+	 * @param actionStr - the action performed (i.e. KRUSKAL, SORTED EDGES)
 	 * @param gRep - graph representation upon which the sort was performed.
 	 * @param sortName - name of the sort (all caps) used.
 	 * @param runtime - runtime of the sort (stored in private vars upon sort).
 	 */
-	public void printSortedEdges(
-			Edge[] a, 
+	public void printEdges(
+			Edge[] a,
+			String actionStr,
 			String gRep, 
 			String sortName, 
 			long runtime)
 	{
-		System.out.printf("SORTED EDGES WITH %s USING %s\n",
+		System.out.printf("%s WITH %s USING %s\n",
+				actionStr,
 				gRep,
 				sortName);
 		
@@ -411,7 +619,17 @@ public class Graph {
 			}
 		}
 		
-		System.out.printf("\nTotal weight = %d\n", totalWeight);
+		if (actionStr.equals("KRUSKAL"))
+		{
+			if (numVertices <= 10)
+			{
+				System.out.printf("\nTotal weight of MST using Kruskal: %d\n", 
+						totalWeight);
+			}
+		}
+		else
+			System.out.printf("\nTotal weight = %d\n", totalWeight);
+		
 		System.out.printf("Runtime: %d milliseconds\n\n", runtime);
 	}
 	

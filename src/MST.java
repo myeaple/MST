@@ -109,7 +109,12 @@ public class MST {
 		g.printAdjacencyList();
 		g.printDFSInfo();
 		
-		g.performEdgeSorts();
+		//g.performEdgeSorts();
+		
+		g.performKruskal();
+		
+		// TODO: Build MST with Prim's algorithm.
+		
 	}
 	
 	/**
@@ -119,7 +124,7 @@ public class MST {
 	 * 
 	 * @param message - the message to print upon exiting.
 	 */
-	private static void exitWithMessage(String message)
+	public static void exitWithMessage(String message)
 	{
 		System.out.println(message);
 		System.exit(1);
