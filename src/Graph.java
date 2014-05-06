@@ -490,13 +490,41 @@ public class Graph {
 	}
 	
 	/**
+	 * performPrim()
+	 * 
+	 * Performs Prim's Algorithm to generate an MST using the different
+	 * representations of the Graph (Matrix, List) and prints the results.
+	 */
+	public void performPrim()
+	{
+		final String actionStr = "PRIM";
+		
+		// Kruskal with Matrix...
+		printDivider();
+		printEdges(
+				primMST(GraphType.Matrix),
+				actionStr,
+				matrixRepStr, 
+				null,
+				primTime);
+		
+		printDivider();
+		printEdges(
+				primMST(GraphType.List), 
+				actionStr,
+				adjListRepStr, 
+				null,
+				kruskalTime);
+	}
+	
+	/**
 	 * primMST()
 	 * 
 	 * Creates a MST from the Graph using Prim's algorithm.
 	 * 
 	 * @return - the minimum spanning tree of the graph as an array of Edges.
 	 */
-	private Edge[] primMST()
+	private Edge[] primMST(GraphType gType)
 	{
 		primTime = System.currentTimeMillis();
 		
@@ -676,10 +704,15 @@ public class Graph {
 			String sortName, 
 			long runtime)
 	{
-		System.out.printf("%s WITH %s USING %s\n",
-				actionStr,
-				gRep,
-				sortName);
+		if (sortName != null)
+			System.out.printf("%s WITH %s USING %s\n",
+					actionStr,
+					gRep,
+					sortName);
+		else
+			System.out.printf("%s WITH %s\n",
+					actionStr,
+					gRep);
 		
 		int totalWeight = 0;
 		for (int i = 0; i < a.length; i++)
