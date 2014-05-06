@@ -9,14 +9,12 @@
  *
  */
 
-import java.util.Comparator;
 import java.util.NoSuchElementException;
 
 public class MinPQ {
 
-	private Key[] a;	// Items in the PQ, stored from indices 1 to N
+	private Vertex[] pq;	// Items in the PQ, stored from indices 1 to N
 	private int N;		// Number of items in the priority queue
-	private Comparator<Key> comparator;
 	
 	/**
 	 * MinPQ()
@@ -35,35 +33,8 @@ public class MinPQ {
 	 * @param capacity - the initial capacity of the priority queue
 	 */
 	public MinPQ(int capacity) {
-		a = (Key[]) new Object[capacity + 1];
+		pq = (Vertex[]) new Object[capacity + 1];
 		N = 0;
-	}
-	
-	/**
-	 * MinPQ()
-	 * 
-	 * Initializes the priority queue with the given capacity and
-	 * the given comparator.
-	 * 
-	 * @param capacity - the initial capacity of the priority queue.
-	 * @param comparator - the comparator to be used.
-	 */
-	public MinPQ(int capacity, Comparator<Key> comparator) {
-		this.comparator = comparator;
-		a = (Key[]) new Object[capacity + 1];
-		N = 0;
-	}
-	
-	/**
-	 * MinPQ()
-	 * 
-	 * Initializes the priority queue with a capacity of 1 and
-	 * the given comparator.
-	 * 
-	 * @param comparator - the comparator to be used.
-	 */
-	public MinPQ(Comparator<Key> comparator) {
-		this(1, comparator);
 	}
 	
 	/**
@@ -74,13 +45,13 @@ public class MinPQ {
 	 * 
 	 * @param keys - the keys to construct the priority queue from.
 	 */
-	public MinPQ(Key[] keys) {
+	public MinPQ(Vertex[] keys) {
 		N = keys.length;
-		a = (Key[]) new Object[keys.length + 1];
+		pq = (Vertex[]) new Object[keys.length + 1];
 		
 		// Fill in the pq from 1 to N with the given keys.
 		for (int i = 1; i <= N; i++)
-			a[i] = keys[i-1];
+			pq[i] = keys[i-1];
 		
 		// Sink the necessary elements in the first half of the
 		// priority queue to heapify it.
@@ -117,11 +88,11 @@ public class MinPQ {
 	 * 
 	 * @return - the minimum element in the priority queue.
 	 */
-	public Key min() {
+	public Vertex min() {
 		if (isEmpty())
 			throw new NoSuchElementException("No elements in PQ!");
 		
-		return a[1];
+		return pq[1];
 	}
 	
 	/**
@@ -132,12 +103,12 @@ public class MinPQ {
 	 * @param capacity
 	 */
 	private void resize(int capacity){
-		Key[] temp = (Key[]) new Object[capacity];
+		Vertex[] temp = (Vertex[]) new Object[capacity];
 		
 		for (int i = 1; i <= N; i++)
-			temp[i] = a[i];
+			temp[i] = pq[i];
 		
-		a = temp;
+		pq = temp;
 	}
 	
 	/**
@@ -147,17 +118,17 @@ public class MinPQ {
 	 * 
 	 * @param e
 	 */
-	public void insert(Key e) {
+	public void insert(Vertex e) {
 		// If we're out of space, resize the priority queue.
-		if (N == a.length - 1)
-			resize(2 * a.length);
+		if (N == pq.length - 1)
+			resize(2 * pq.length);
 		
 		// Insert e, then have it swim up to an appropriate position.
-		a[++N] = e;
-		swim(e);
+		pq[++N] = e;
+		swim(N);
 	}
 	
-	public Key popMin() {
+	public Vertex popMin() {
 		if (isEmpty())
 			throw new NoSuchElementException("Priority queue has no elements!");
 		
@@ -165,17 +136,17 @@ public class MinPQ {
 		swap(1, N);
 		
 		// Keep a reference to the first element.
-		Key min = a[N--];
+		Vertex min = pq[N--];
 		
 		// Sink the elemeent swapped to the front.
 		sink(1);
 		
 		// Remove the last element.
-		a[N+1] = null;
+		pq[N+1] = null;
 		
 		// If necessary, resize the priority queue.
-		if ((N > 0) && (N == (a.length - 1) / 4))
-			resize(a.length / 2);
+		if ((N > 0) && (N == (pq.length - 1) / 4))
+			resize(pq.length / 2);
 		
 		return min;
 	}
@@ -229,12 +200,10 @@ public class MinPQ {
 	 * @param j - index of the second element to be compared.
 	 */
 	private boolean greater(int i, int j) {
-		if (comparator == null) {
-			return ((Comparable<Key>) a[i]).compareTo(a[j]) > 0;
-		}
-		else {
-			return comparator.compare(a[i], a[j]) > 0;
-		}
+		if (pq[i].getPriority() > pq[j].getPriority())
+			return true;
+		
+		return false;
 	}
 	
 	/**
@@ -246,9 +215,9 @@ public class MinPQ {
 	 * @param j - index of the second element to be swapped.
 	 */
 	private void swap(int i, int j) {
-		Key exch = a[i];
-		a[i] = a[j];
-		a[j] = exch;
+		Vertex exch = pq[i];
+		pq[i] = pq[j];
+		pq[j] = exch;
 	}
 	
 }

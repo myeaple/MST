@@ -34,6 +34,7 @@ public class Graph {
 	private long generationTime = 0;
 	
 	private long kruskalTime = 0;
+	private long primTime = 0;
 	
 	/*
 	 * Do NOT use the default constructor. Instead, use the specific
@@ -486,6 +487,35 @@ public class Graph {
 			if (rank[u] == rank[v])
 				rank[v]++;
 		}
+	}
+	
+	/**
+	 * primMST()
+	 * 
+	 * Creates a MST from the Graph using Prim's algorithm.
+	 * 
+	 * @return - the minimum spanning tree of the graph as an array of Edges.
+	 */
+	private Edge[] primMST()
+	{
+		primTime = System.currentTimeMillis();
+		
+		ArrayList<Edge> mst = new ArrayList<Edge>();
+		
+		/* while PQ != empty
+		 * 		u = deleteMIn(PQ)
+		 * 		for each v adjacent to u do
+		 * 			if v is an element of PQ and weight(u,v) < PQ[v].getPriority()
+		 * 				parent[v] = u
+		 * 				PQ[v].setPriority(weight(u,v))
+		 * 			endif
+		 * 		end for
+		 * end while
+		 */
+		
+		primTime = System.currentTimeMillis() - primTime;
+		
+		return mst.toArray(new Edge[mst.size()]);
 	}
 	
 	/* ---------------- Print Functions ---------------- */
