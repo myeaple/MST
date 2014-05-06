@@ -621,11 +621,8 @@ public class Graph {
 		
 		if (actionStr.equals("KRUSKAL"))
 		{
-			if (numVertices <= 10)
-			{
-				System.out.printf("\nTotal weight of MST using Kruskal: %d\n", 
-						totalWeight);
-			}
+			System.out.printf("\nTotal weight of MST using Kruskal: %d\n", 
+					totalWeight);			
 		}
 		else
 			System.out.printf("\nTotal weight = %d\n", totalWeight);
