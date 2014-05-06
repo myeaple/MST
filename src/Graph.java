@@ -501,17 +501,63 @@ public class Graph {
 		primTime = System.currentTimeMillis();
 		
 		ArrayList<Edge> mst = new ArrayList<Edge>();
+		HashSet<Integer> inMST = new HashSet<Integer>();
 		
-		/* while PQ != empty
-		 * 		u = deleteMIn(PQ)
-		 * 		for each v adjacent to u do
-		 * 			if v is an element of PQ and weight(u,v) < PQ[v].getPriority()
-		 * 				parent[v] = u
-		 * 				PQ[v].setPriority(weight(u,v))
-		 * 			endif
-		 * 		end for
-		 * end while
-		 */
+		int[] parent = new int[numVertices];
+		
+		// Initialize all priorities and weights to "infinity."
+		for (int i = 1; i < vertices.length; i++)
+		{
+			vertices[i].setPriority(Integer.MAX_VALUE);
+			vertices[i].setWeight(Integer.MAX_VALUE);
+		}
+		
+		// We want to start with Vertex 0.
+		vertices[0].setPriority(0);
+		parent[0] = 0; // Vertex 0 is its own parent.
+		
+		MinPQ pq = new MinPQ(vertices);
+		
+		while (!pq.isEmpty())
+		{
+			// Remove the min element.
+			Vertex u = pq.popMin();
+			
+			// Add it to the list of Vertices in the MST.
+			inMST.add(u.getName());
+			
+			// If it's any Vertex other than Vertex 0...
+			if (u.getName() != 0)
+			{
+				// Add the edge between u and its parent.
+				mst.add(u.getEdge(parent[u.getName()]));
+			}
+			
+			ArrayList<Edge> edges = u.getEdges();
+			Iterator<Edge> iter = edges.iterator();
+			
+			// For every edge v adjacent to u...
+			while (iter.hasNext())
+			{
+				Edge currEdge = iter.next();
+				try {
+					Vertex v = currEdge.getOtherVertex(u);
+					
+					// If v isn't in the MST already, and
+					// weight(u,v) < priority of v in PQ...
+					if (!inMST.contains(v.getName()) && 
+							currEdge.getWeight() < v.getPriority())
+					{
+						// Update the parent and priority.
+						parent[v.getName()] = u.getName();
+						v.setPriority(currEdge.getWeight());
+					}
+				
+				} catch(VertexException e) {
+					MST.exitWithError(e);
+				}
+			}
+		}
 		
 		primTime = System.currentTimeMillis() - primTime;
 		

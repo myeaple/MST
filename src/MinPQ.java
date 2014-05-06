@@ -14,6 +14,7 @@ import java.util.NoSuchElementException;
 public class MinPQ {
 
 	private Vertex[] pq;	// Items in the PQ, stored from indices 1 to N
+	private int[] qp;	// Location of Vertex i (i is index in qp) in pq.
 	private int N;		// Number of items in the priority queue
 	
 	/**
@@ -53,6 +54,16 @@ public class MinPQ {
 		for (int i = 1; i <= N; i++)
 			pq[i] = keys[i-1];
 		
+		heapify();
+	}
+	
+	/**
+	 * heapify()
+	 * 
+	 * Heapifies the minimimum PQ.
+	 */
+	public void heapify()
+	{
 		// Sink the necessary elements in the first half of the
 		// priority queue to heapify it.
 		for (int k = N/2; k >= 1; k--)
@@ -185,7 +196,7 @@ public class MinPQ {
 				break;
 			
 			swap(k, j);
-			k=j;
+			k = j;
 		}
 	}
 	

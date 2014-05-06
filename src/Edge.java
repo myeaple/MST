@@ -136,6 +136,27 @@ public class Edge {
 	}
 	
 	/**
+	 * getOtherVertex()
+	 * 
+	 * Returns the Vertex opposite the one passed in.
+	 * Throws a VertexException if an incorrect Vertex 
+	 * was passed in.
+	 * 
+	 * @param u - the Vertex opposite the one you want from the Edge.
+	 * @return - the other Vertex.
+	 */
+	public Vertex getOtherVertex(Vertex u) throws VertexException
+	{		
+		if (vLeft.equals(u))
+			return vRight;
+		else if (vRight.equals(u))
+			return vLeft;
+		
+		throw new VertexException("The Vertex passed in was not "
+				+ "a part of the edge.");
+	}
+	
+	/**
 	 * toString()
 	 * 
 	 * Display the Edge as a string.
