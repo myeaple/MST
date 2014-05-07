@@ -529,21 +529,38 @@ public class Graph {
 		primTime = System.currentTimeMillis();
 		
 		ArrayList<Edge> mst = new ArrayList<Edge>();
-		
 		int[] parent = new int[numVertices];
 		
-		// Initialize all priorities and weights to "infinity."
-		for (int i = 1; i < vertices.length; i++)
+		// Get Edges from the appropriate representation.
+		Edge[] edges;
+		if (gType == GraphType.List)
 		{
-			vertices[i].setPriority(Integer.MAX_VALUE);
-			vertices[i].setWeight(Integer.MAX_VALUE);
+			edges = getEdgesFrom(adjList, vertices);
+		}
+		else
+		{
+			edges = getEdgesFrom(matrix, vertices);
+		}
+		
+		Vertex[] verts = new Vertex[numVertices];
+		for (int i = 0; i < edges.length; i++)
+		{
+			verts[edges[i].getLeftVertex().getName()] = edges[i].getLeftVertex();
+			verts[edges[i].getRightVertex().getName()] = edges[i].getRightVertex();
+		}
+		
+		// Initialize all priorities and weights to "infinity."
+		for (int i = 1; i < verts.length; i++)
+		{
+			verts[i].setPriority(Integer.MAX_VALUE);
+			verts[i].setWeight(Integer.MAX_VALUE);
 		}
 		
 		// We want to start with Vertex 0.
-		vertices[0].setPriority(0);
+		verts[0].setPriority(0);
 		parent[0] = 0; // Vertex 0 is its own parent.
 		
-		MinPQ pq = new MinPQ(vertices);
+		MinPQ pq = new MinPQ(verts);
 		
 		while (!pq.isEmpty())
 		{
@@ -554,11 +571,14 @@ public class Graph {
 			if (u.getName() != 0)
 			{
 				// Add the edge between u and its parent.
-				mst.add(u.getEdge(parent[u.getName()]));
+				mst.add(new Edge(
+						verts[parent[u.getName()]], 
+						u, 
+						u.getEdge(parent[u.getName()]).getWeight()));
 			}
 			
-			ArrayList<Edge> edges = u.getEdges();
-			Iterator<Edge> iter = edges.iterator();
+			ArrayList<Edge> vEdges = u.getEdges();
+			Iterator<Edge> iter = vEdges.iterator();
 			
 			// For every edge v adjacent to u...
 			while (iter.hasNext())
@@ -584,16 +604,105 @@ public class Graph {
 			}
 		}
 		
-		Edge[] mstArr = new Edge[mst.size() + 1];
+		Edge[] mstArr = new Edge[numVertices - 1];
 		for (int i = 0; i < mst.size(); i++)
 		{
 			Edge e = mst.get(i);
-			mstArr[e.getRightVertex().getName()] = e;
+			mstArr[e.getRightVertex().getName() - 1] = e;
 		}
 		
 		primTime = System.currentTimeMillis() - primTime;
 		
-		return mst.toArray(new Edge[mst.size()]);
+		return mstArr;
+	}
+	
+	/**
+	 * getEdgesFrom()
+	 * 
+	 * Gets an array of edges from an adjacency list representation
+	 * of a graph.
+	 * 
+	 * @param adjList - the adjacency list to get the edges from.
+	 * @return - an array of the Edges in the graph.
+	 */
+	private Edge[] getEdgesFrom(
+			ArrayList<ArrayList<Integer>> adjList,
+			Vertex[] vertices)
+	{
+		ArrayList<Edge> edges = new ArrayList<Edge>();
+		
+		for (int i = 0; i < adjList.size(); i++)
+		{
+			for (int j = 0; j < adjList.get(i).size(); j++)
+			{
+				// Get the edge from each vertex...
+				Edge currEdge = vertices[i].getEdgeByVRight(adjList.get(i).get(j));
+				
+				// Add the edges to our ArrayList.
+				// This will ignore duplicate edges.
+				if (currEdge != null && !edges.contains(currEdge))
+					edges.add(currEdge);
+			}
+		}
+		
+		// Convert the HashSet to an array of Edges and return it.
+		return edges.toArray(new Edge[edges.size()]);
+	}
+	
+	/**
+	 * getEdgesFrom()
+	 * 
+	 * Gets an array of edges from a matrix representation
+	 * of a graph.
+	 * 
+	 * @param matrix - the matrix to get the edges from. 
+	 * @return - an array of the Edges in the graph.
+	 */
+	private Edge[] getEdgesFrom(int[][] matrix, Vertex[] vertices)
+	{
+		HashMap<Integer, HashSet<Integer>> visited = 
+			new HashMap<Integer, HashSet<Integer>>();
+		ArrayList<Edge> edges = new ArrayList<Edge>();
+		
+		for (int i = 0; i < matrix.length; i++)
+		{
+			for (int j = 0; j < matrix[i].length; j++)
+			{
+				// Check to see if we've already created the edge.
+				// We only need half of the graph because it is symmetric.
+				if (visited.containsKey(j) && visited.get(j).contains(i))
+					continue;
+				else
+				{
+					int weight = matrix[i][j];
+					
+					// Only create an edge if one exists (weight > 0).
+					if (weight > 0)
+					{
+						Vertex left = vertices[i];
+						Vertex right = vertices[j];
+												
+						// Add the new Edge.
+						edges.add(new Edge(left, right, weight));
+						
+						// Add this to our list of visited edges.
+						if (visited.containsKey(i))
+						{
+							visited.get(i).add(j);
+						}
+						else
+						{
+							HashSet<Integer> visNew = new HashSet<Integer>();
+							visNew.add(j);
+							visited.put(i, visNew);
+						}
+					}
+				}
+			}
+		}
+		
+		// Convert the ArrayList of Edges to an array and return it.
+		return edges.toArray(new Edge[edges.size()]);
 	}
 	
 	/* ---------------- Print Functions ---------------- */
