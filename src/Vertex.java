@@ -203,18 +203,62 @@ public class Vertex {
 	}
 	
 	/**
-	 * getEdge()
+	 * getEdgesRight()
 	 * 
-	 * Returns the edge with a right vertex of the specified name.
+	 * Returns Edges in which this Vertex is the left Vertex
+	 * on the Edge.
+	 * 
+	 * @return - a list of Edges.
+	 */
+	public ArrayList<Edge> getEdgesRight()
+	{
+		ArrayList<Edge> result = new ArrayList<Edge>();
+		
+		Iterator<Edge> iter = edges.iterator();
+		while(iter.hasNext())
+		{
+			Edge e = iter.next();
+			if (e.getLeftVertex().equals(this))
+				result.add(e);
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * getEdgeByVRight()
+	 * 
+	 * Returns the Edge with a right Vertex of the specified name.
 	 * 
 	 * @param vRightName - the name of the right Vertex on the edge to be found.
-	 * @return - the found Edge (null if not found)
+	 * @return - the found Edge (null if not found).
 	 */
-	public Edge getEdge(int vRightName)
+	public Edge getEdgeByVRight(int vRightName)
 	{
 		for (int i = 0; i < edges.size(); i++)
 		{
 			if (edges.get(i).getRightVertex().getName() == vRightName)
+				return edges.get(i);
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * getEdge()
+	 * 
+	 * Returns the Edge connected to both this one 
+	 * and the Vertex of the specified name.
+	 * 
+	 * @param v - the other Vertex.
+	 * @return - the Edge between the two vertices (null if not found).
+	 */
+	public Edge getEdge(int v)
+	{
+		for (int i = 0; i < edges.size(); i++)
+		{
+			if (edges.get(i).getRightVertex().getName() == v ||
+					edges.get(i).getLeftVertex().getName() == v)
 				return edges.get(i);
 		}
 		

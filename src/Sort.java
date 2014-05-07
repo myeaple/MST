@@ -100,7 +100,7 @@ public abstract class Sort {
 			for (int j = 0; j < adjList.get(i).size(); j++)
 			{
 				// Get the edge from each vertex...
-				Edge currEdge = vertices[i].getEdge(adjList.get(i).get(j));
+				Edge currEdge = vertices[i].getEdgeByVRight(adjList.get(i).get(j));
 				
 				// Add the edges to our ArrayList.
 				// This will ignore duplicate edges.

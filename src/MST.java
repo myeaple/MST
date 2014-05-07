@@ -113,7 +113,7 @@ public class MST {
 		
 		g.performKruskal();
 		
-		// TODO: Build MST with Prim's algorithm.
+		g.performPrim();
 		
 	}
 	

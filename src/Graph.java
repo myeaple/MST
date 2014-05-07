@@ -529,7 +529,6 @@ public class Graph {
 		primTime = System.currentTimeMillis();
 		
 		ArrayList<Edge> mst = new ArrayList<Edge>();
-		HashSet<Integer> inMST = new HashSet<Integer>();
 		
 		int[] parent = new int[numVertices];
 		
@@ -549,10 +548,7 @@ public class Graph {
 		while (!pq.isEmpty())
 		{
 			// Remove the min element.
-			Vertex u = pq.popMin();
-			
-			// Add it to the list of Vertices in the MST.
-			inMST.add(u.getName());
+			Vertex u = pq.deleteMin();
 			
 			// If it's any Vertex other than Vertex 0...
 			if (u.getName() != 0)
@@ -573,18 +569,26 @@ public class Graph {
 					
 					// If v isn't in the MST already, and
 					// weight(u,v) < priority of v in PQ...
-					if (!inMST.contains(v.getName()) && 
+					if (pq.contains(v.getName()) && 
 							currEdge.getWeight() < v.getPriority())
 					{
 						// Update the parent and priority.
 						parent[v.getName()] = u.getName();
 						v.setPriority(currEdge.getWeight());
+						pq.heapify();
 					}
 				
 				} catch(VertexException e) {
 					MST.exitWithError(e);
 				}
 			}
+		}
+		
+		Edge[] mstArr = new Edge[mst.size() + 1];
+		for (int i = 0; i < mst.size(); i++)
+		{
+			Edge e = mst.get(i);
+			mstArr[e.getRightVertex().getName()] = e;
 		}
 		
 		primTime = System.currentTimeMillis() - primTime;

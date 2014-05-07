@@ -10,11 +10,13 @@
  */
 
 import java.util.NoSuchElementException;
+import java.util.HashSet;
 
 public class MinPQ {
 
 	private Vertex[] pq;	// Items in the PQ, stored from indices 1 to N
 	private int[] qp;	// Location of Vertex i (i is index in qp) in pq.
+	private HashSet<Integer> inPQ; // Keeps track of which Vertices are in pq.
 	private int N;		// Number of items in the priority queue
 	
 	/**
@@ -34,7 +36,8 @@ public class MinPQ {
 	 * @param capacity - the initial capacity of the priority queue
 	 */
 	public MinPQ(int capacity) {
-		pq = (Vertex[]) new Object[capacity + 1];
+		pq = new Vertex[capacity + 1];
+		inPQ = new HashSet<Integer>();
 		N = 0;
 	}
 	
@@ -48,11 +51,15 @@ public class MinPQ {
 	 */
 	public MinPQ(Vertex[] keys) {
 		N = keys.length;
-		pq = (Vertex[]) new Object[keys.length + 1];
+		pq = new Vertex[keys.length + 1];
+		inPQ = new HashSet<Integer>();
 		
 		// Fill in the pq from 1 to N with the given keys.
 		for (int i = 1; i <= N; i++)
+		{
 			pq[i] = keys[i-1];
+			inPQ.add(keys[i-1].getName());
+		}
 		
 		heapify();
 	}
@@ -114,7 +121,7 @@ public class MinPQ {
 	 * @param capacity
 	 */
 	private void resize(int capacity){
-		Vertex[] temp = (Vertex[]) new Object[capacity];
+		Vertex[] temp = new Vertex[capacity];
 		
 		for (int i = 1; i <= N; i++)
 			temp[i] = pq[i];
@@ -136,10 +143,18 @@ public class MinPQ {
 		
 		// Insert e, then have it swim up to an appropriate position.
 		pq[++N] = e;
+		inPQ.add(e.getName());
 		swim(N);
 	}
 	
-	public Vertex popMin() {
+	/**
+	 * deleteMin()
+	 * 
+	 * Deletes the minimum element from the PQ and returns it.
+	 * 
+	 * @return - the minimum element in the PQ.
+	 */
+	public Vertex deleteMin() {
 		if (isEmpty())
 			throw new NoSuchElementException("Priority queue has no elements!");
 		
@@ -148,8 +163,9 @@ public class MinPQ {
 		
 		// Keep a reference to the first element.
 		Vertex min = pq[N--];
+		inPQ.remove(min.getName());
 		
-		// Sink the elemeent swapped to the front.
+		// Sink the element swapped to the front.
 		sink(1);
 		
 		// Remove the last element.
@@ -160,6 +176,19 @@ public class MinPQ {
 			resize(pq.length / 2);
 		
 		return min;
+	}
+	
+	/**
+	 * contains()
+	 * 
+	 * Returns true if PQ contains Vertex i
+	 * 
+	 * @param i - the name of the Vertex to check for.
+	 * @return - true if Vertex i is in PQ.
+	 */
+	public boolean contains(int i)
+	{
+		return inPQ.contains(i);
 	}
 	
 	/* Binary Heap Helper Functions */
