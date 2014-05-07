@@ -529,7 +529,6 @@ public class Graph {
 		primTime = System.currentTimeMillis();
 		
 		ArrayList<Edge> mst = new ArrayList<Edge>();
-		int[] parent = new int[numVertices];
 		
 		// Get Edges from the appropriate representation.
 		Edge[] edges;
@@ -549,32 +548,25 @@ public class Graph {
 			verts[edges[i].getRightVertex().getName()] = edges[i].getRightVertex();
 		}
 		
-		// Initialize all priorities and weights to "infinity."
-		for (int i = 1; i < verts.length; i++)
-		{
-			verts[i].setPriority(Integer.MAX_VALUE);
-			verts[i].setWeight(Integer.MAX_VALUE);
-		}
+		MinPQ pq = new MinPQ(verts);
 		
 		// We want to start with Vertex 0.
-		verts[0].setPriority(0);
-		parent[0] = 0; // Vertex 0 is its own parent.
-		
-		MinPQ pq = new MinPQ(verts);
+		pq.setPriority(0, 0, 0);
 		
 		while (!pq.isEmpty())
 		{
 			// Remove the min element.
-			Vertex u = pq.deleteMin();
+			int[] min = pq.deleteMin();
+			Vertex u = verts[min[0]];
 			
 			// If it's any Vertex other than Vertex 0...
 			if (u.getName() != 0)
 			{
 				// Add the edge between u and its parent.
 				mst.add(new Edge(
-						verts[parent[u.getName()]], 
-						u, 
-						u.getEdge(parent[u.getName()]).getWeight()));
+						verts[min[2]], 
+						verts[min[0]], 
+						min[1]));
 			}
 			
 			ArrayList<Edge> vEdges = u.getEdges();
@@ -590,12 +582,13 @@ public class Graph {
 					// If v isn't in the MST already, and
 					// weight(u,v) < priority of v in PQ...
 					if (pq.contains(v.getName()) && 
-							currEdge.getWeight() < v.getPriority())
+							currEdge.getWeight() < pq.getPriority(v.getName()))
 					{
 						// Update the parent and priority.
-						parent[v.getName()] = u.getName();
-						v.setPriority(currEdge.getWeight());
-						pq.heapify();
+						pq.setPriority(
+								v.getName(), 
+								currEdge.getWeight(), 
+								u.getName());
 					}
 				
 				} catch(VertexException e) {

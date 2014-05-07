@@ -20,9 +20,6 @@ public class Vertex {
 	private ArrayList<Edge> edges;
 	private boolean visited;
 	
-	private int priority; // The priority of the Vertex in a Priority Queue.
-	private int weight; // The current weight of this Vertex in the PQ.
-	
 	public Vertex(){ }
 	
 	/**
@@ -114,56 +111,6 @@ public class Vertex {
 	public String nameToString()
 	{
 		return Integer.toString(name);
-	}
-	
-	/**
-	 * setPriority()
-	 * 
-	 * Sets the priority of this Vertex. This is for use
-	 * with a priority queue, specifically.
-	 * 
-	 * @param priority - the new priority.
-	 */
-	public void setPriority(int priority)
-	{
-		this.priority = priority;
-	}
-	
-	/**
-	 * setWeight()
-	 * 
-	 * Sets the weight of this Vertex in the PQ.
-	 * 
-	 * @param weight - the new weight.
-	 */
-	public void setWeight(int weight)
-	{
-		this.weight = weight;
-	}
-	
-	/**
-	 * getWeight()
-	 * 
-	 * Gets the weight of this Vertex in the PQ.
-	 * 
-	 * @return - the weight of this Vertex in the PQ.
-	 */
-	public int getWeight()
-	{
-		return weight;
-	}
-	
-	/**
-	 * getPriority()
-	 * 
-	 * Gets the priority of this Vertex. This is for use
-	 * with a priority queue.
-	 * 
-	 * @return - the priority of this Vertex.
-	 */
-	public int getPriority()
-	{
-		return priority;
 	}
 	
 	/**

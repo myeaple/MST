@@ -14,10 +14,16 @@ import java.util.HashSet;
 
 public class MinPQ {
 
-	private Vertex[] pq;	// Items in the PQ, stored from indices 1 to N
+	private int[][] pq;	// Items in the PQ, stored from indices 1 to N
 	private int[] qp;	// Location of Vertex i (i is index in qp) in pq.
-	private HashSet<Integer> inPQ; // Keeps track of which Vertices are in pq.
 	private int N;		// Number of items in the priority queue
+	
+	private final int NUM_NODE_PROPERTIES = 3; // Vertex, Weight, Parent
+	private final int VERTEX_PROP = 0; // Index of Vertex Property
+	private final int WEIGHT_PROP = 1; // Index of Weight(Priority) Property
+	private final int PARENT_PROP = 2; // Index of Parent Property
+	
+	private final int NO_PARENT = -1;
 	
 	/**
 	 * MinPQ()
@@ -36,9 +42,12 @@ public class MinPQ {
 	 * @param capacity - the initial capacity of the priority queue
 	 */
 	public MinPQ(int capacity) {
-		pq = new Vertex[capacity + 1];
-		inPQ = new HashSet<Integer>();
+		pq = new int[capacity + 1][NUM_NODE_PROPERTIES];
+		qp = new int[capacity];
 		N = 0;
+		
+		for (int i = 0; i < capacity; i++)
+			qp[i] = -1;
 	}
 	
 	/**
@@ -51,14 +60,23 @@ public class MinPQ {
 	 */
 	public MinPQ(Vertex[] keys) {
 		N = keys.length;
-		pq = new Vertex[keys.length + 1];
-		inPQ = new HashSet<Integer>();
+		pq = new int[keys.length + 1][NUM_NODE_PROPERTIES];
+		
+		int max = 0;
+		for (int i = 0; i < keys.length; i++)
+		{
+			if (keys[i].getName() > max)
+				max = keys[i].getName();
+		}
+		qp = new int[max + 1];
 		
 		// Fill in the pq from 1 to N with the given keys.
 		for (int i = 1; i <= N; i++)
 		{
-			pq[i] = keys[i-1];
-			inPQ.add(keys[i-1].getName());
+			pq[i][VERTEX_PROP] = keys[i-1].getName();
+			pq[i][WEIGHT_PROP] = Integer.MAX_VALUE;
+			pq[i][PARENT_PROP] = NO_PARENT;
+			qp[keys[i-1].getName()] = i;
 		}
 		
 		heapify();
@@ -106,7 +124,7 @@ public class MinPQ {
 	 * 
 	 * @return - the minimum element in the priority queue.
 	 */
-	public Vertex min() {
+	public int[] min() {
 		if (isEmpty())
 			throw new NoSuchElementException("No elements in PQ!");
 		
@@ -121,7 +139,7 @@ public class MinPQ {
 	 * @param capacity
 	 */
 	private void resize(int capacity){
-		Vertex[] temp = new Vertex[capacity];
+		int[][] temp = new int[capacity][NUM_NODE_PROPERTIES];
 		
 		for (int i = 1; i <= N; i++)
 			temp[i] = pq[i];
@@ -142,8 +160,23 @@ public class MinPQ {
 			resize(2 * pq.length);
 		
 		// Insert e, then have it swim up to an appropriate position.
-		pq[++N] = e;
-		inPQ.add(e.getName());
+		pq[++N][VERTEX_PROP] = e.getName();
+		pq[N][WEIGHT_PROP] = Integer.MAX_VALUE; // Initialize to "infinity."
+		pq[N][PARENT_PROP] = NO_PARENT; // Initialize to no parent.
+		
+		// If the new Vertex name is > qp.length + 1, resize it.
+		if (e.getName() > qp.length + 1)
+		{
+			int[] temp = new int[e.getName() + 1];
+			
+			for (int i = 0; i < qp.length; i++)
+			{
+				temp[i] = qp[i];
+			}
+			
+			qp = temp;
+		}
+		qp[e.getName()] = N;
 		swim(N);
 	}
 	
@@ -154,7 +187,7 @@ public class MinPQ {
 	 * 
 	 * @return - the minimum element in the PQ.
 	 */
-	public Vertex deleteMin() {
+	public int[] deleteMin() {
 		if (isEmpty())
 			throw new NoSuchElementException("Priority queue has no elements!");
 		
@@ -162,8 +195,8 @@ public class MinPQ {
 		swap(1, N);
 		
 		// Keep a reference to the first element.
-		Vertex min = pq[N--];
-		inPQ.remove(min.getName());
+		qp[pq[N][VERTEX_PROP]] = -1; // Mark it as no longer in PQ.
+		int[] min = pq[N--];
 		
 		// Sink the element swapped to the front.
 		sink(1);
@@ -188,7 +221,40 @@ public class MinPQ {
 	 */
 	public boolean contains(int i)
 	{
-		return inPQ.contains(i);
+		return qp[i] != -1;
+	}
+	
+	/**
+	 * setPriority()
+	 * 
+	 * Sets the priority of a given vertex with a new weight and
+	 * parent.
+	 * 
+	 * @param vertex - the vertex to update.
+	 * @param weight - the new weight.
+	 * @param parent - the new parent.
+	 */
+	public void setPriority(int vertex, int weight, int parent)
+	{
+		// Set the new values.
+		pq[qp[vertex]][WEIGHT_PROP] = weight;
+		pq[qp[vertex]][PARENT_PROP] = parent;
+		
+		// Re-heapify.
+		heapify();
+	}
+	
+	/**
+	 * getPriority()
+	 * 
+	 * Gets the priority of the specified vertex.
+	 * 
+	 * @param vertex - the Vertex whose priority you want to retrieve.
+	 * @return - the priority of the specified vertex.
+	 */
+	public int getPriority(int vertex)
+	{
+		return pq[qp[vertex]][WEIGHT_PROP];
 	}
 	
 	/* Binary Heap Helper Functions */
@@ -240,7 +306,7 @@ public class MinPQ {
 	 * @param j - index of the second element to be compared.
 	 */
 	private boolean greater(int i, int j) {
-		if (pq[i].getPriority() > pq[j].getPriority())
+		if (pq[i][WEIGHT_PROP] > pq[j][WEIGHT_PROP])
 			return true;
 		
 		return false;
@@ -255,7 +321,11 @@ public class MinPQ {
 	 * @param j - index of the second element to be swapped.
 	 */
 	private void swap(int i, int j) {
-		Vertex exch = pq[i];
+		// Update qp first...
+		qp[pq[i][VERTEX_PROP]] = j;
+		qp[pq[j][VERTEX_PROP]] = i;
+		
+		int[] exch = pq[i];
 		pq[i] = pq[j];
 		pq[j] = exch;
 	}
