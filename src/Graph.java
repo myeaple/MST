@@ -504,7 +504,7 @@ public class Graph {
 		printEdges(
 				primMST(GraphType.Matrix),
 				actionStr,
-				matrixRepStr, 
+				"ADJACENCY " + matrixRepStr, 
 				null,
 				primTime);
 		
@@ -512,7 +512,7 @@ public class Graph {
 		printEdges(
 				primMST(GraphType.List), 
 				actionStr,
-				adjListRepStr, 
+				"ADJACENCY " + adjListRepStr, 
 				null,
 				kruskalTime);
 	}
@@ -845,6 +845,11 @@ public class Graph {
 		{
 			System.out.printf("\nTotal weight of MST using Kruskal: %d\n", 
 					totalWeight);			
+		}
+		else if (actionStr.equals("PRIM"))
+		{
+			System.out.printf("\nTotal weight of MST using Prim: %d\n", 
+					totalWeight);
 		}
 		else
 			System.out.printf("\nTotal weight = %d\n", totalWeight);
